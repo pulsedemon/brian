@@ -1,9 +1,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Hello</title>
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+		}
+		#dimensions {
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+		}
+		#block {
+			float: left;
+			width: 30px;
+			height: 30px;
+		}
+	</style>
+  <title>blocks</title>
 </head>
 <body>
+<div id="dimensions">
+</div>
+<script>
+	var browser = {
+		width: window.innerWidth, 
+		height: window.innerHeight,
+	}
+
+	function randomColor() {
+	    var colors = ["#000", "#ff00ff", "#00ffff", "#ccff06", "#663300", "#6600cc", "#0066ff"];
+	  	return colors[Math.floor(Math.random() * colors.length)];
+	}
+		/*for (var i = 0; i <  browser.width * browser.height / (30 * 30); i ++) {
+			console.log(i);
+			document.body.innerHTML +=  '<div id ="dimensions"><div style="float: left; width:30px; height:30px; background: '+ randomColor() +';"></div></div>'
+			
+		};*/	
+		var box = document.getElementById("dimensions");
+
+		for (var i = 0; i < browser.width * browser.height / (30 * 30); i ++) {
+			if (i >  box.offsetWidth * browser.height / (30 * 30)){
+				break;
+			}
+			var div = document.createElement("div");
+			div.style.cssText = "background: "+ randomColor() +";"
+			div.id = "block";
+			
+			box.appendChild(div);
+		}
+		console.log(browser.width);
+		console.log(browser.height);
+		console.log(box.offsetWidth);
+		console.log(box.offsetHeight);
+</script>
 
 </body>
 </html>
