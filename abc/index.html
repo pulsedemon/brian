@@ -50,6 +50,8 @@
 		z: [90, "abcimg/z.jpg"],
 	};
 
+	
+
 	function randomColor() {
 		var colors = ["#FF0000", "#00FF00", "#33CCFF", "#FFFF00", "#990099", "#0000CC", "#669900"];
 		return colors[Math.floor(Math.random() * colors.length)];
@@ -63,7 +65,14 @@
 				var wrapperdiv = document.getElementById("wrapper");
 				wrapperdiv.style.cssText = "background: "+ randomColor() +";";
 				var contentdiv = document.getElementById("content");
-				contentdiv.innerHTML ="<img src= "+ key_codes[key][1] +">";
+				if (isNaN(key_codes[key][1])) {
+					contentdiv.innerHTML ="<img src= "+ key_codes[key][1] +">";
+				}
+				else {
+					contentdiv.style.cssText = "color: "+ randomColor() +";";
+					contentdiv.innerHTML ="<p>"+ key_codes[key][2] +"</p>";
+				}
+
 			}
 		}	
 	};
