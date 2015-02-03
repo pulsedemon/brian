@@ -51,7 +51,6 @@
 	};
 
 	
-
 	function randomColor() {
 		var colors = ["#FF0000", "#00FF00", "#33CCFF", "#FFFF00", "#990099", "#0000CC", "#669900"];
 		return colors[Math.floor(Math.random() * colors.length)];
@@ -61,7 +60,7 @@
 		var input = event.charCode || event.keyCode;
 		console.log(input);
 		for (var key in key_codes) {
-			if (key_codes[key][0] === input) {
+			if (key_codes[key][0] === input || key_codes[key][1] === input) {
 				var wrapperdiv = document.getElementById("wrapper");
 				wrapperdiv.style.cssText = "background: "+ randomColor() +";";
 				var contentdiv = document.getElementById("content");
