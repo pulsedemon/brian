@@ -64,14 +64,12 @@
 				var wrapperdiv = document.getElementById("wrapper");
 				wrapperdiv.style.cssText = "background: "+ randomColor() +";";
 				var contentdiv = document.getElementById("content");
-				var sound = new Audio(key_codes[key][2]);
-				if (isNaN(key_codes[key][1])) {
-					sound.play();
+				new Audio(key_codes[key][2]).play();
+				if (isNaN(key_codes[key][1])) {	
 					contentdiv.innerHTML ="<img src= "+ key_codes[key][1] +">";
 				}
 				else {
 					contentdiv.style.cssText = "color: "+ randomColor() +";";
-					sound.play();
 					contentdiv.innerHTML ="<p>"+ key_codes[key][3] +"</p>";
 				}
 
