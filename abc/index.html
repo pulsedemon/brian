@@ -7,7 +7,7 @@
 <body>
 <div id ="wrapper">
 	<div id ="content">
-	
+
 	</div>
 </div>
 <script>
@@ -50,28 +50,26 @@
 		z: [90, "abcimg/z.jpg", "sounds/z.mp3"],
 	};
 
-	
 	function randomColor() {
 		var colors = ["#00FF99", "#663300", "#E6E600", "#000000", "#FF0000", "#00FF00", "#33CCFF", "#990099", "#0000CC", "#669900"];
 		return colors[Math.floor(Math.random() * colors.length)];
 	}
-
-	document.onkeyup = function () {
+	
+	document.onkeyup = function() {
 		var input = event.charCode || event.keyCode;
 		console.log(input);
 		for (var key in key_codes) {
 			if (key_codes[key][0] === input || key_codes[key][1] === input) {
-				document.getElementById("wrapper").style.cssText = "background: "+ randomColor() +";";
-				var contentdiv = document.getElementById("content");
-				new Audio(key_codes[key][2]).play();
+				document.getElementById("wrapper").style.cssText = "background:" + randomColor() + ";";
+				var content_div = document.getElementById("content");
+				content_div.innerHTML = '<audio src =" '+ key_codes[key][2]+' " autoplay="autoplay">';
 				if (isNaN(key_codes[key][1])) {	
-					contentdiv.innerHTML ="<img src= "+ key_codes[key][1] +">";
+					content_div.innerHTML += "<img src=" + key_codes[key][1] + ">";
 				}
 				else {
-					contentdiv.style.cssText = "color: "+ randomColor() +";";
-					contentdiv.innerHTML ="<p>"+ key_codes[key][3] +"</p>";
+					content_div.style.cssText = "color: " + randomColor() + ";";
+					content_div.innerHTML += "<p>" + key_codes[key][3] + "</p>";
 				}
-
 			}
 		}	
 	};
