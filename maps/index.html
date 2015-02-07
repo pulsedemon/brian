@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Map Stuff</title>
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script type="text/javascript"
+			src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAr0yRAkCR1SV4hfFGmpSBVS-Qlwv5Apck">
+		</script>
+	</head>
+<body>
+	<div id="wrapper">
+		<div id="content">
+			<div id="left-wrapper">
+				<p>Click for map</p>
+				<button id="horicon" onclick="get_map(this)">373 Horicon Ave</button>
+				<button id="brookwood" onclick="get_map(this)">50 Brookwood Pkwy</button>
+			</div>
+			<div id="right-wrapper">
+				<p>map results...</p>
+				<div id="map-container">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		var mapOptions = {
+			horicon: {
+				street: "horicon",
+				center: new google.maps.LatLng(40.001086, -74.375201),
+				zoom: 18
+			},
+			brookwood: {
+				street: "brookwood",
+				center: new google.maps.LatLng(40.119927, -74.245798),
+				zoom: 18
+			},
+		};
+
+		function get_map(name) {
+			for (var key in mapOptions) {
+				if (mapOptions[key].street === name.id) {
+					new google.maps.Map(document.getElementById("map-container"), mapOptions[key]);
+					google.maps.event.addDomListener(window, 'load');
+				}
+			}
+		}
+	</script>
+</body>
+</html>
