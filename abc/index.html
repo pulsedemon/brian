@@ -61,7 +61,7 @@
 		for (var key in key_codes) {
 			console.log(key);
 			if (key_codes[key][0] === input || key_codes[key][1] === input) {
-				document.getElementById("wrapper").style.cssText = "background:" + randomColor() + "";
+				document.getElementById("wrapper").style.cssText = "background:" + randomColor() + ";";
 				var content_div = document.getElementById("content");
 				content_div.innerHTML = '<audio src =" '+ key_codes[key][2] +' " autoplay="autoplay">';
 				if (isNaN(key_codes[key][1])) {	
