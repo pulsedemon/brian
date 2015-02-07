@@ -32,53 +32,40 @@ body {
 }
 #wrapper {
 	height:100%;
-	background: #193100;;
 	width: 100%;
 }
 #content {
 	height: 100%;
-	width: 100%;
-	overflow: auto;
+	width: 100%;	
 }
-#left-wrapper {
+#side-bar {
 	float: left;
 	height: 100%;
 	width: 160px;
-	padding-top: 20px;
 	border-right: 3px solid #333300;
 	background: #856545;
 }
-#left-wrapper button {
+#side-bar button {
 	margin-bottom: 7px;
 	margin-left: 15px;
 	width: 130px;
 	height: 50px;
 }
-#left-wrapper p {
-	margin-bottom: 10px;
-	margin-left: 24px;
+#side-bar p {
+	margin: 20px 0 10px 24px;
 	font-size: 20px;
 }
-#right-wrapper {
-	float: left;
-	width: 500px;
-	margin-left: 150px;
+#map {
+	height: 100%;
+	background: #CCCCCC
 }
-#right-wrapper p {
-	position: absolute;
-	top: 50%;
-	margin-top: -250px;
-	margin-left: 300px;
+#map p {
 	color: #ffffff;
-	font-size: 16px;
-	font-family: Arial;
-}
-#map-container {
+	font-size: 100px;
 	position: absolute;
 	top: 50%;
-	margin-top: -200px;
-	width: 500px;
-	height: 400px;
-	background: #ffffff;
+	left: 50%;
+	margin: -60px 0 0 10px;
 }
+
 
