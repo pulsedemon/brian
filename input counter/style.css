@@ -48,15 +48,15 @@ body {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	margin: -200px 0 0 -95px;
+	margin: -200px 0 0 -105px;
 	height: 30px;
-	width: 260px;
+	width: 270px;
 }
 #p-wrap strong {
 	width: 50px;
 	font-size: 18px;
 	float: left;
-	margin: 5px 60px 0 0;
+	margin: 5px 85px 0 0;
 }
 #wrapper textarea {
 	position: absolute;

@@ -7,18 +7,18 @@
 <body>
 	<div id="wrapper">
 		<div id="p-wrap">
-			<strong id="letter-count">Letters:0 </strong>
+			<strong id="character-count">Characters:0 </strong>
 			<strong id="word-count">Words:0 </strong>
 		</div>
 		<textarea id="text"></textarea>
 	</div>
 <script>
 	var text = document.getElementById("text");
-	var letter = document.getElementById("letter-count");
+	var character = document.getElementById("character-count");
 	var word = document.getElementById("word-count");
 
 	document.onkeyup = function() {
-		letter.innerHTML = "Letters:" + text.value.length + "";
+		character.innerHTML = "Characters:" + text.value.length + "";
 		if(text.value !== '') {
 			word.innerHTML = "Words:" + text.value.match(/\S+\s*/g).length; +"";
 		}
