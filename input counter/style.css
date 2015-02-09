@@ -1,0 +1,73 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+html {
+	box-sizing: border-box;
+}
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+img { 
+	box-sizing: content-box; 
+}
+
+html {
+	height: 100%;
+}
+body {
+	height: 100%;
+}
+#wrapper {
+	height: 100%;
+	background: #0099CC;
+}
+#p-wrap {
+	overflow: auto;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -200px 0 0 -95px;
+	height: 30px;
+	width: 260px;
+}
+#p-wrap strong {
+	width: 50px;
+	font-size: 18px;
+	float: left;
+	margin: 5px 60px 0 0;
+}
+#wrapper textarea {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -150px 0 0 -250px;
+	width: 500px;
+	height: 300px;
+	border: 4px solid;
+	resize: none;
+}
+#wrapper textarea:focus {
+	background: #99FFCC;
+}
