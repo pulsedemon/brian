@@ -12,8 +12,23 @@
 		<div id="content">
 			<div id="side-bar">
 				<p>Click for map</p>
-				<button id="horicon" onclick="get_map(this)">373 Horicon Ave</button>
-				<button id="brookwood" onclick="get_map(this)">50 Brookwood Pkwy</button>
+				<button id="wallchina" onclick="get_map(this)">Great Wall of China</button>
+				<button id="liberty" onclick="get_map(this)">Statue of Liberty</button>
+				<button id="tradecenter" onclick="get_map(this)">World Trade Center</button>
+				<button id="colosseum" onclick="get_map(this)">Colosseum, Rome</button>
+				<button id="pyramidgiza" onclick="get_map(this)">Pyramid at Giza</button>
+				<button id="stonehenge" onclick="get_map(this)">Stonehenge</button>
+				<button id="grandcanyon" onclick="get_map(this)">Grand Canyon</button>
+				<button id="tajmahal" onclick="get_map(this)">Taj Mahal</button>
+				<button id="niagrafalls" onclick="get_map(this)">Niagra Falls</button>
+				<button id="victoriafalls" onclick="get_map(this)">Victoria Falls</button>
+				<button id="greatskellig" onclick="get_map(this)">Great Skellig</button>
+				<button id="angelfalls" onclick="get_map(this)">Angel Falls</button>
+				<button id="lotustemple" onclick="get_map(this)">Lotus Temple</button>
+				<button id="machupicchu" onclick="get_map(this)">Machu Picchu</button>
+				<button id="bigben" onclick="get_map(this)">Big Ben</button>
+				<button id="sagrada" onclick="get_map(this)">Sagrada Familia</button>
+				<button id="neuschwanstein" onclick="get_map(this)">Neuschwanstein Castle</button>
 			</div>
 			<div id="map">
 				<p>^_^</p>
@@ -22,15 +37,90 @@
 	</div>
 	<script>
 		var mapOptions = {
-			horicon: {
-				title: "my house!",
-				center: new google.maps.LatLng(40.001086, -74.375201),
+			wallchina: {
+				title: "Great Wall of China",
+				center: new google.maps.LatLng(40.430707, 116.564609),
+				zoom: 16
+			},
+			liberty: {
+				title: "Statue of Liberty",
+				center: new google.maps.LatLng(40.689234, -74.044491),
+				zoom: 19
+			},
+			tradecenter: {
+				title: "Ground 0",
+				center: new google.maps.LatLng(40.712647, -74.012199),
+				zoom: 19
+			},
+			colosseum: {
+				title: "Colosseum",
+				center: new google.maps.LatLng(41.890229, 12.492238),
 				zoom: 18
 			},
-			brookwood: {
-				title: "taylor's parents' house!",
-				center: new google.maps.LatLng(40.119927, -74.245798),
+			pyramidgiza: {
+				title: "Great Pyramid at Giza",
+				center: new google.maps.LatLng(29.979268, 31.134201),
+				zoom: 18
+			},
+			stonehenge: {
+				title: "Stonehenge",
+				center: new google.maps.LatLng(51.178890, -1.826242),
+				zoom: 18
+			},
+			grandcanyon: {
+				title: "Grand Canyon",
+				center: new google.maps.LatLng(36.107155, -112.112983),
+				zoom: 19
+			},
+			tajmahal: {
+				title: "Taj Mahal",
+				center: new google.maps.LatLng(27.175012, 78.042158),
+				zoom: 18
+			},
+			niagrafalls: {
+				title: "Niagra Falls",
+				center: new google.maps.LatLng(43.078819, -79.076125),
+				zoom: 17
+			},
+			victoriafalls: {
+				title: "Victoria Falls",
+				center: new google.maps.LatLng(-17.924316, 25.855868),
 				zoom: 16
+			},
+			greatskellig: {
+				title: "Great Skellig",
+				center: new google.maps.LatLng(51.770645, -10.540513),
+				zoom: 17
+			},
+			angelfalls: {
+				title: "Angel Falls",
+				center: new google.maps.LatLng(5.967545, -62.535543),
+				zoom: 18
+			},
+			lotustemple: {
+				title: "Lotus Temple",
+				center: new google.maps.LatLng(28.553492, 77.258822),
+				zoom: 18
+			},
+			machupicchu: {
+				title: "Machu Picchu",
+				center: new google.maps.LatLng(-13.163149, -72.544978),
+				zoom: 18
+			},
+			bigben: {
+				title: "Big Ben",
+				center: new google.maps.LatLng(51.500754, -0.124636),
+				zoom: 20
+			},
+			sagrada: {
+				title: "Sagrada Familia",
+				center: new google.maps.LatLng(41.403629, 2.174200),
+				zoom: 20
+			},
+			neuschwanstein: {
+				title: "Neuschwanstein Castle",
+				center: new google.maps.LatLng(47.557571, 10.749806),
+				zoom: 18
 			},
 		};
 		function get_map(name) {
@@ -40,6 +130,7 @@
 				title: mapOptions[name.id].title
 			}).setMap(map);
 			google.maps.event.addDomListener(window, 'load');
+			map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
 		}
 	</script>
 </body>

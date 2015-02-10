@@ -50,10 +50,11 @@ body {
 	width: 100%;	
 }
 #side-bar {
+	overflow: auto;
 	float: left;
 	height: 100%;
-	width: 163px;
-	border-right: 3px solid #ff0000;
+	width: 178px;
+	border-right: 3px solid #FFFF66;
 	background: #856545;
 }
 #side-bar p {
@@ -66,24 +67,24 @@ body {
 }
 #side-bar button {
 	border-radius: 15px;
-	border: 2px solid #000000;
+	border: 1px solid #000000;
 	font-size: 15px;
 	font-weight: bold;
 	color: #000000;
-	background: #33CCFF;
+	background: #00A6FF;
 	margin-bottom: 7px;
 	margin-left: 15px;
 	width: 130px;
 	height: 50px;
 }
 #side-bar button:hover {
-	background: #FFFF00;
+	background: #FFFF66;
 }
 #side-bar button:active {
-	background: #FFFF00;
+	background: #FFFF66;
 }
 #side-bar button:focus {
-	background: #FFFF00;
+	background: #FFFF66;
 	color: #ff0000;
 }
 #map {
