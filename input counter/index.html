@@ -18,12 +18,12 @@
 	var word = document.getElementById("word-count");
 
 	document.onkeyup = function() {
-		character.innerHTML = "Characters:" + text.value.length + "";
+		character.innerHTML = "Characters:<p>" + text.value.length + "</p>";
 		if(text.value !== '') {
-			word.innerHTML = "Words:" + text.value.match(/\S+\s*/g).length; +"";
+			word.innerHTML = "Words:<p>" + text.value.match(/\S+\s*/g).length; + "</p>";
 		}
 		else {
-			word.innerHTML = "Words:0";
+			word.innerHTML = "Words:<p>0</p>";
 		}
 	}
 </script>

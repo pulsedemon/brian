@@ -23,9 +23,20 @@ article, aside, details, figcaption, figure,
 footer, header, hgroup, menu, nav, section {
 	display: block;
 }
+html {
+	box-sizing: border-box;
+}
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+img { 
+	box-sizing: content-box; 
+}
+
 
 html {
 	height: 100%;
+	font-family: arial;
 }
 body {
 	height: 100%;
@@ -41,19 +52,39 @@ body {
 #side-bar {
 	float: left;
 	height: 100%;
-	width: 160px;
-	border-right: 3px solid #333300;
+	width: 163px;
+	border-right: 3px solid #ff0000;
 	background: #856545;
 }
+#side-bar p {
+	height: 23px;
+	width: 130px;
+	font-size: 20px;
+	font-weight: bold;
+	margin: 20px 0 10px 16px;
+	color: #ffffff;
+}
 #side-bar button {
+	border-radius: 15px;
+	border: 2px solid #000000;
+	font-size: 15px;
+	font-weight: bold;
+	color: #000000;
+	background: #33CCFF;
 	margin-bottom: 7px;
 	margin-left: 15px;
 	width: 130px;
 	height: 50px;
 }
-#side-bar p {
-	margin: 20px 0 10px 24px;
-	font-size: 20px;
+#side-bar button:hover {
+	background: #FFFF00;
+}
+#side-bar button:active {
+	background: #FFFF00;
+}
+#side-bar button:focus {
+	background: #FFFF00;
+	color: #ff0000;
 }
 #map {
 	height: 100%;

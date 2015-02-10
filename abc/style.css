@@ -24,7 +24,17 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 html {
+	box-sizing: border-box;
+}
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+img { 
+	box-sizing: content-box; 
+}
+html {
 	height: 100%;
+	font-family: arial;
 }
 body {
 	line-height: 1;
@@ -59,7 +69,8 @@ table {
 	margin-top: -326px;
 }
 #content p {
+	width: 461px;
 	background-color: #ffffff;
-	padding-left: 65px;
+	padding-left: 47px;
 	font-size: 652px;
 }
