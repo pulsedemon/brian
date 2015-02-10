@@ -70,12 +70,18 @@ body {
 	border: 1px solid #000000;
 	font-size: 15px;
 	font-weight: bold;
-	color: #000000;
-	background: #00A6FF;
 	margin-bottom: 7px;
 	margin-left: 15px;
 	width: 130px;
 	height: 50px;
+}
+.button-normal {
+	color: #000000;
+	background: #00A6FF;
+}
+.button-focus {
+	background: #FFFF66;
+	color: #ff0000;
 }
 #side-bar button:hover {
 	background: #FFFF66;
@@ -83,10 +89,10 @@ body {
 #side-bar button:active {
 	background: #FFFF66;
 }
-#side-bar button:focus {
+/*#side-bar button:focus {
 	background: #FFFF66;
 	color: #ff0000;
-}
+}*/
 #map {
 	height: 100%;
 	background: #CCCCCC

@@ -12,23 +12,23 @@
 		<div id="content">
 			<div id="side-bar">
 				<p>Click for map</p>
-				<button id="wallchina" onclick="get_map(this)">Great Wall of China</button>
-				<button id="liberty" onclick="get_map(this)">Statue of Liberty</button>
-				<button id="tradecenter" onclick="get_map(this)">World Trade Center</button>
-				<button id="colosseum" onclick="get_map(this)">Colosseum, Rome</button>
-				<button id="pyramidgiza" onclick="get_map(this)">Pyramid at Giza</button>
-				<button id="stonehenge" onclick="get_map(this)">Stonehenge</button>
-				<button id="grandcanyon" onclick="get_map(this)">Grand Canyon</button>
-				<button id="tajmahal" onclick="get_map(this)">Taj Mahal</button>
-				<button id="niagrafalls" onclick="get_map(this)">Niagra Falls</button>
-				<button id="victoriafalls" onclick="get_map(this)">Victoria Falls</button>
-				<button id="greatskellig" onclick="get_map(this)">Great Skellig</button>
-				<button id="angelfalls" onclick="get_map(this)">Angel Falls</button>
-				<button id="lotustemple" onclick="get_map(this)">Lotus Temple</button>
-				<button id="machupicchu" onclick="get_map(this)">Machu Picchu</button>
-				<button id="bigben" onclick="get_map(this)">Big Ben</button>
-				<button id="sagrada" onclick="get_map(this)">Sagrada Familia</button>
-				<button id="neuschwanstein" onclick="get_map(this)">Neuschwanstein Castle</button>
+				<button id="wallchina" class="button-normal">Great Wall of China</button>
+				<button id="liberty" class="button-normal">Statue of Liberty</button>
+				<button id="tradecenter" class="button-normal">World Trade Center</button>
+				<button id="colosseum" class="button-normal">Colosseum, Rome</button>
+				<button id="pyramidgiza" class="button-normal">Pyramid at Giza</button>
+				<button id="stonehenge" class="button-normal">Stonehenge</button>
+				<button id="grandcanyon" class="button-normal">Grand Canyon</button>
+				<button id="tajmahal" class="button-normal">Taj Mahal</button>
+				<button id="niagrafalls" class="button-normal">Niagra Falls</button>
+				<button id="victoriafalls" class="button-normal">Victoria Falls</button>
+				<button id="greatskellig" class="button-normal">Great Skellig</button>
+				<button id="angelfalls" class="button-normal">Angel Falls</button>
+				<button id="lotustemple" class="button-normal">Lotus Temple</button>
+				<button id="machupicchu" class="button-normal">Machu Picchu</button>
+				<button id="bigben" class="button-normal">Big Ben</button>
+				<button id="sagrada" class="button-normal">Sagrada Familia</button>
+				<button id="neuschwanstein" class="button-normal">Neuschwanstein Castle</button>
 			</div>
 			<div id="map">
 				<p>^_^</p>
@@ -38,99 +38,135 @@
 	<script>
 		var mapOptions = {
 			wallchina: {
+				name: "wallchina",
 				title: "Great Wall of China",
 				center: new google.maps.LatLng(40.430707, 116.564609),
 				zoom: 16
 			},
 			liberty: {
+				name: "liberty",
 				title: "Statue of Liberty",
 				center: new google.maps.LatLng(40.689234, -74.044491),
 				zoom: 19
 			},
 			tradecenter: {
+				name: "tradecenter",
 				title: "Ground 0",
 				center: new google.maps.LatLng(40.712647, -74.012199),
 				zoom: 19
 			},
 			colosseum: {
+				name: "colosseum",
 				title: "Colosseum",
 				center: new google.maps.LatLng(41.890229, 12.492238),
 				zoom: 18
 			},
 			pyramidgiza: {
+				name: "pyramidgiza",
 				title: "Great Pyramid at Giza",
 				center: new google.maps.LatLng(29.979268, 31.134201),
 				zoom: 18
 			},
 			stonehenge: {
+				name: "stonehenge",
 				title: "Stonehenge",
 				center: new google.maps.LatLng(51.178890, -1.826242),
 				zoom: 18
 			},
 			grandcanyon: {
+				name: "grandcanyon",
 				title: "Grand Canyon",
 				center: new google.maps.LatLng(36.107155, -112.112983),
 				zoom: 19
 			},
 			tajmahal: {
+				name: "tajmahal",
 				title: "Taj Mahal",
 				center: new google.maps.LatLng(27.175012, 78.042158),
 				zoom: 18
 			},
 			niagrafalls: {
+				name: "niagrafalls",
 				title: "Niagra Falls",
 				center: new google.maps.LatLng(43.078819, -79.076125),
 				zoom: 17
 			},
 			victoriafalls: {
+				name: "victoriafalls",
 				title: "Victoria Falls",
 				center: new google.maps.LatLng(-17.924316, 25.855868),
 				zoom: 16
 			},
 			greatskellig: {
+				name: "greatskellig",
 				title: "Great Skellig",
 				center: new google.maps.LatLng(51.770645, -10.540513),
 				zoom: 17
 			},
 			angelfalls: {
+				name: "angelfalls",
 				title: "Angel Falls",
 				center: new google.maps.LatLng(5.967545, -62.535543),
 				zoom: 18
 			},
 			lotustemple: {
+				name: "lotustemple",
 				title: "Lotus Temple",
 				center: new google.maps.LatLng(28.553492, 77.258822),
 				zoom: 18
 			},
 			machupicchu: {
+				name: "machupicchu",
 				title: "Machu Picchu",
 				center: new google.maps.LatLng(-13.163149, -72.544978),
 				zoom: 18
 			},
 			bigben: {
+				name: "bigben",
 				title: "Big Ben",
 				center: new google.maps.LatLng(51.500754, -0.124636),
 				zoom: 20
 			},
 			sagrada: {
+				name: "sagrada",
 				title: "Sagrada Familia",
 				center: new google.maps.LatLng(41.403629, 2.174200),
 				zoom: 20
 			},
 			neuschwanstein: {
+				name: "neuschwanstein",
 				title: "Neuschwanstein Castle",
 				center: new google.maps.LatLng(47.557571, 10.749806),
 				zoom: 18
 			},
-		};
-		function get_map(name) {
-			var map = new google.maps.Map(document.getElementById("map"), mapOptions[name.id]);
-			new google.maps.Marker({
-				position: mapOptions[name.id].center,
-				title: mapOptions[name.id].title
-			}).setMap(map);
-			google.maps.event.addDomListener(window, 'load');
-			map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+		}; 
+
+		var buttons = document.getElementsByTagName("button");
+
+		function def_class() {
+			for(var i = 0; i < buttons.length; i++) {
+				if(buttons[i].className === "button-focus") {
+					buttons[i].className = "button-normal"
+				}
+			}
+		}
+
+		for(var i = 0; i < buttons.length; i++) {
+			buttons[i].onclick = function () {
+				def_class();
+				for(var key in mapOptions) {
+					if(mapOptions[key].name === this.id) {
+						this.className = "button-focus";
+						var map = new google.maps.Map(document.getElementById("map"), mapOptions[key]);
+						new google.maps.Marker({
+							position: mapOptions[key].center,
+							title: mapOptions[key].title
+						}).setMap(map);
+						google.maps.event.addDomListener(window, 'load');
+						map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+					}
+				}
+			}
 		}
 	</script>
 </body>
