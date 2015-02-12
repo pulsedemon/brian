@@ -104,7 +104,8 @@ var map_options = {
 	},
 }; 
 
-var buttons = document.getElementsByTagName("button");
+var buttons, class_select, i;
+
 function class_remove() {
 	var class_select = document.querySelector(".button-active");
 	if(class_select !== null) {
@@ -112,21 +113,17 @@ function class_remove() {
 	}
 }
 
-for(var i = 0; i < buttons.length; i++) {
-	buttons[i].onclick = function () {
-		var map;
-		class_remove();
-		for(var key in map_options) {
-			if(map_options[key].name === this.id) {
-				this.classList.add("button-active");
-				map = new google.maps.Map(document.getElementById("map"), map_options[key]);
-				new google.maps.Marker({
-					position: map_options[key].center,
-					title: map_options[key].title
-				}).setMap(map);
-				google.maps.event.addDomListener(window, 'load');
-				map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
-			}
-		}
-	}
+function get_map(name) {
+	var map, select;
+	class_remove();
+	select = document.querySelector("#"+name.id+"");
+	select.classList.add("button-active");
+	map = new google.maps.Map(document.getElementById("map"), map_options[name.id]);
+	new google.maps.Marker({
+		position: map_options[name.id].center,
+		title: map_options[name.id].title
+	}).setMap(map);
+	google.maps.event.addDomListener(window, 'load');
+	map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
 }
+
