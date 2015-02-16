@@ -24,7 +24,6 @@ function random_fire() {
 fire = document.getElementById('fire');
 
 function move_plane(jetContainer) {
-	var fire_change;
 	x_pos = jetContainer.pageX || window.event.clientX;
 	y_pos = jetContainer.pageY || window.event.clientY;
 	if (selected !== null) {

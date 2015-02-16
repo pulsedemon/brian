@@ -42,21 +42,21 @@ function randomColor() {
 	return colors[Math.floor(Math.random() * colors.length)];
 }
 
-var sound_element = document.getElementById("sound");
 
 function sound(clips) {
-	sound_element.src=clips;
+	var sound_element = document.getElementById("sound");
+	sound_element.src = clips;
 	sound_element.play();
 };
 
 document.onkeyup = function(event) {
-	var input = event.keyCode;
+	var input, content_div; 
+	input = event.keyCode;
 	console.log(input);
 	for (var key in key_codes) {
 		if (key_codes[key][0] === input || key_codes[key][1] === input) {
 			document.getElementById("wrapper").style.cssText = "background:" + randomColor() + ";";
-			sound(key_codes[key][2]);
-			var content_div = document.getElementById("content");
+			content_div = document.getElementById("content");
 			if (isNaN(key_codes[key][1])) {	
 				content_div.innerHTML = '<img src=' + key_codes[key][1] + '>';
 			}
@@ -64,6 +64,7 @@ document.onkeyup = function(event) {
 				content_div.style.cssText = 'color: ' + randomColor() + ';';
 				content_div.innerHTML = '<p>' + key_codes[key][3] + '</p>';
 			}
+			sound(key_codes[key][2]);
 		}
 	}	
 };
