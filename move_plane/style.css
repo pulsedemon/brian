@@ -57,7 +57,7 @@ body {
 	-webkit-animation: skyScroll 15s infinite linear;
 	-moz-animation: skyScroll 15s infinite linear;
 	height: 100%;	
-	background: url(skies.png) repeat-x;	
+	background: url(skies.jpg) repeat-x;	
 }
 #jet-container {
 	width: 250px;
