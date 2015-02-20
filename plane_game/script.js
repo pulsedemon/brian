@@ -66,7 +66,7 @@ function grab(jetContainer) {
 }
 function random_fire() {
 	var fires = ['fire1.png', 'fire2.png'];
-	return fires[Math.floor(Math.random() * fires.length)];5
+	return fires[Math.floor(Math.random() * fires.length)];
 }
 
 fire = document.getElementById('fire');
