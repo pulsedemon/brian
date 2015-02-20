@@ -53,9 +53,9 @@ body {
 	to { background-position: -6398px 0; }
 }
 #wrapper {
-	animation: skyScroll 15s infinite linear; 
-	-webkit-animation: skyScroll 15s infinite linear;
-	-moz-animation: skyScroll 15s infinite linear;
+	animation: skyScroll 10s infinite linear; 
+	-webkit-animation: skyScroll 10s infinite linear;
+	-moz-animation: skyScroll 10s linear;
 	height: 100%;	
 	background: url(skies.jpg) repeat-x;	
 }

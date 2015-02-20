@@ -34,7 +34,6 @@ function move_plane(jetContainer) {
 
 function let_go() {
 	selected = null;
-	fire.style.cssText = 'background: url("fire3-tiny.png");';
 }
 
 document.onmousemove = move_plane;
