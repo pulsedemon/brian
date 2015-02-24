@@ -22,7 +22,6 @@ var selected, BGposX, ctx, keyPressed, key_x, key_y, key_speed, interval, x_mous
 BGposX = 0;
 jet_id = document.getElementById("jet-container");
 
-
 canvas = document.getElementById('background-canvas');
 	ctx = canvas.getContext('2d');
 	ctx.canvas.width  = window.innerWidth;
@@ -49,27 +48,33 @@ canvas = document.getElementById('background-canvas');
 //---KEYBOARD CONTROLS
 keyPressed = [];
 window.onkeydown = function(input) {
+	console.log(input.keyCode);
 	keyPressed[input.keyCode] = true;
 }
 window.onkeyup = function(input) {
 	keyPressed[input.keyCode] = false;
 }
 
-key_x = 0;
-key_y = 0;
+key_x = jet_id.style.left;
+key_y = jet_id.style.top;
 key_speed = 5;
 
 function updateKeys() {
 	fire.style.cssText += 'background: url(' + random_fire() + '), url("fire3-tiny.png");';
+
+	//--LEFT
 	if (keyPressed[37] || keyPressed[65]) {
         key_x -= key_speed;
 	}
+	//--RIGHT
     if (keyPressed[39] || keyPressed[68]) {
         key_x += key_speed;
     }
+    //--UP
     if (keyPressed[38] || keyPressed[87]) {
         key_y -= key_speed;
     }
+    //--DOWN
     if (keyPressed[40] || keyPressed[83]) {
         key_y += key_speed;
     }
@@ -98,7 +103,6 @@ function updateKeys() {
 	else {
 		jet_id.style.top = key_y + 'px';
 	}	
-
 }
 interval = setInterval(updateKeys, 1);
 
@@ -127,8 +131,8 @@ fire = document.getElementById('fire');
 
 function move_plane(jetContainer) {
 	var jet_positionX, jet_positionY, input;
-	x_mousePos = jetContainer.pageX || window.event.clientX;
-	y_mousePos = jetContainer.pageY || window.event.clientY;
+	x_mousePos = jet_id.pageX || window.event.clientX;
+	y_mousePos = jet_id.pageY || window.event.clientY;
 	
 	if (selected !== null) {
 		fire.style.cssText += 'background: url(' + random_fire() + '), url("fire3-tiny.png");';
@@ -163,7 +167,6 @@ function let_go() {
 		interval = setInterval(updateKeys, 1);
 	}
 	selected = null;
-	
 }
 document.onmousemove = move_plane;
 document.onmouseup = let_go;
