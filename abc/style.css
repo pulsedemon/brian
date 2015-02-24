@@ -32,6 +32,8 @@ html {
 img { 
 	box-sizing: content-box; 
 }
+/*--------END RESET--------*/
+
 html {
 	height: 100%;
 	font-family: arial;
@@ -39,21 +41,6 @@ html {
 body {
 	line-height: 1;
 	height: 100%;
-}
-ol, ul {
-	list-style: none;
-}
-blockquote, q {
-	quotes: none;
-}
-blockquote:before, blockquote:after,
-q:before, q:after {
-	content: '';
-	content: none;
-}
-table {
-	border-collapse: collapse;
-	border-spacing: 0;
 }
 #wrapper {
 	width: 100%;
@@ -74,4 +61,10 @@ table {
 	background-color: #ffffff;
 	padding-left: 47px;
 	font-size: 652px;
+}
+#content strong {
+	display: block;
+	width: 461px;
+	font-size: 40px;
+	margin-top: 200px;
 }

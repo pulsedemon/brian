@@ -17,11 +17,10 @@
 	}
 };*/
 
-var selected, BGposX, ctx, x_pos, y_pos, x_element, y_element, fire, jet_id;
-
-selected = null;
+var selected, BGposX, ctx, keyPressed, key_x, key_y, key_speed, interval, x_mousePos, y_mousePos, x_jet, y_jet, fire, jet_id;
 
 BGposX = 0;
+jet_id = document.getElementById("jet-container");
 
 
 canvas = document.getElementById('background-canvas');
@@ -38,7 +37,6 @@ canvas = document.getElementById('background-canvas');
 
 	window.requestAnimationFrame(draw_background);
 	ctx.clearRect(0, 0, W, H);
-	ctx.fillRect(0, 0, W, H);
 	ctx.drawImage(img, BGposX, 0);
 	ctx.drawImage(img, img.width-Math.abs(BGposX), 0);
 	if (Math.abs(BGposX) >= img.width) {
@@ -48,22 +46,78 @@ canvas = document.getElementById('background-canvas');
 	BGposX -= 8;
 })();
 
-/*function random_objects() {
-	var objects = ['blocks.block1', 'blocks.block2', 'blocks.block3', 'blocks.block4'];
-	return [Math.floor(Math.random() * objects.length)]
-}*/
+//---KEYBOARD CONTROLS
+keyPressed = [];
+window.onkeydown = function(input) {
+	keyPressed[input.keyCode] = true;
+}
+window.onkeyup = function(input) {
+	keyPressed[input.keyCode] = false;
+}
 
-jet_id = document.getElementById("jet-container");
+key_x = 0;
+key_y = 0;
+key_speed = 5;
+
+function updateKeys() {
+	fire.style.cssText += 'background: url(' + random_fire() + '), url("fire3-tiny.png");';
+	if (keyPressed[37] || keyPressed[65]) {
+        key_x -= key_speed;
+	}
+    if (keyPressed[39] || keyPressed[68]) {
+        key_x += key_speed;
+    }
+    if (keyPressed[38] || keyPressed[87]) {
+        key_y -= key_speed;
+    }
+    if (keyPressed[40] || keyPressed[83]) {
+        key_y += key_speed;
+    }
+
+    //--this code prevents jetContainer from being moved out of view in the browser.
+	if(key_x >= ctx.canvas.width - jet_id.offsetWidth) {
+		jet_id.style.left = ctx.canvas.width - jet_id.offsetWidth + 'px';
+		key_x = ctx.canvas.width - jet_id.offsetWidth;
+	}
+	else if(key_x <= 0) {
+		jet_id.style.left = 0 + 'px';
+		key_x = 0;
+	}
+	else{
+		jet_id.style.left = key_x + 'px';
+	}
+
+	if(key_y >= ctx.canvas.height - jet_id.offsetHeight) {
+		jet_id.style.top = ctx.canvas.height - jet_id.offsetHeight + 'px';
+		key_y = ctx.canvas.height - jet_id.offsetHeight;
+	}
+	else if(key_y <= 0) {
+		jet_id.style.top = 0 + 'px';
+		key_y = 0;
+	}
+	else {
+		jet_id.style.top = key_y + 'px';
+	}	
+
+}
+interval = setInterval(updateKeys, 1);
+
+
+//---MOUSE CONTROLS
+selected = null;
 
 jet_id.onmousedown = function() {
+	clearInterval(interval);
 	grab(this);
 	return false;
 }
+
 function grab(jetContainer) {
 	selected = jetContainer;
-	x_element = x_pos - selected.offsetLeft;
-	y_element = y_pos - selected.offsetTop;
+	x_jet = x_mousePos - selected.offsetLeft;
+	y_jet = y_mousePos - selected.offsetTop;
 }
+
 function random_fire() {
 	var fires = ['fire1.png', 'fire2.png'];
 	return fires[Math.floor(Math.random() * fires.length)];
@@ -72,41 +126,46 @@ function random_fire() {
 fire = document.getElementById('fire');
 
 function move_plane(jetContainer) {
-	var jet_positionX, jet_positionY;
-	x_pos = jetContainer.pageX || window.event.clientX;
-	y_pos = jetContainer.pageY || window.event.clientY;
+	var jet_positionX, jet_positionY, input;
+	x_mousePos = jetContainer.pageX || window.event.clientX;
+	y_mousePos = jetContainer.pageY || window.event.clientY;
+	
 	if (selected !== null) {
+		fire.style.cssText += 'background: url(' + random_fire() + '), url("fire3-tiny.png");';
 
-		// this code prevents jetContainer from being moved out of view in the browser.
-		jet_positionX = x_pos - x_element;
+		//--this code prevents jetContainer from being moved out of view in the browser.
+		jet_positionX = x_mousePos - x_jet;
 		if(jet_positionX >= ctx.canvas.width - jet_id.offsetWidth) {
-			selected.style.left = ctx.canvas.width - jet_id.offsetWidth + 'px';
+			jet_id.style.left = ctx.canvas.width - jet_id.offsetWidth + 'px';
 		}
 		else if(jet_positionX <= 0) {
-			selected.style.left = 0 + 'px';
+			jet_id.style.left = 0 + 'px';
 		}
 		else{
-			selected.style.left = jet_positionX + 'px';
+			jet_id.style.left = jet_positionX + 'px';
 		}
 
-		jet_positionY = y_pos - y_element;
+		jet_positionY = y_mousePos - y_jet;
 		if(jet_positionY >= ctx.canvas.height - jet_id.offsetHeight) {
-			selected.style.top = ctx.canvas.height - jet_id.offsetHeight + 'px';
+			jet_id.style.top = ctx.canvas.height - jet_id.offsetHeight + 'px';
 		}
 		else if(jet_positionY <= 0) {
-			selected.style.top = 0 + 'px';
+			jet_id.style.top = 0 + 'px';
 		}
 		else {
-		selected.style.top = jet_positionY + 'px';
+			jet_id.style.top = jet_positionY + 'px';
 		}
-
-		fire.style.cssText += 'background: url(' + random_fire() + '), url("fire3-tiny.png");';
-	}	
+	}
 }
 
 function let_go() {
+	if(selected !== null) {
+		interval = setInterval(updateKeys, 1);
+	}
 	selected = null;
+	
 }
-
 document.onmousemove = move_plane;
 document.onmouseup = let_go;
+
+
