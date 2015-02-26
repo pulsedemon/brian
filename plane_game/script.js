@@ -17,8 +17,9 @@
 '	}
 };*/
 
-var timeout, fps, selected, BGposX, ctx, keyPressed, key_x, key_y, key_speed, interval, y_mouse_pos, x_mouse_pos, x_jet, y_jet, fire, jet_id;
+var BGposX, ctx, selected, keyPressed, key_x, key_y, key_speed, y_mouse_pos, x_mouse_pos, x_jet, y_jet, fire, jet_id;
 
+selected = null;
 BGposX = 0;
 jet_id = document.getElementById("jet-container");
 fire = document.getElementById('fire');
@@ -34,89 +35,34 @@ canvas = document.getElementById('background-canvas');
 	H = canvas.height;
 	img = new Image();
 	img.src = 'skies.jpg';
-
+	img.height = H;
+	
 	requestAnimationFrame(draw_background);
 	ctx.clearRect(0, 0, W, H);
 	ctx.drawImage(img, BGposX, 0);
 	ctx.drawImage(img, img.width-Math.abs(BGposX), 0);
+
 	if (Math.abs(BGposX) >= img.width) {
     	BGposX = 0;
 	}
-	
 	BGposX -= 8;
 })();
 
-//---MOUSE CONTROLS
-selected = null;
-
-jet_id.onmousedown = function() {
-	grab(this);
-	return false;
-}
-
-function grab(jetContainer) {
-	selected = jetContainer;
-	x_jet = x_mouse_pos - selected.offsetLeft;
-	y_jet = y_mouse_pos - selected.offsetTop;
-}
-
-function random_fire() {
-	var fires = ['fire1.png', 'fire2.png'];
-	return fires[Math.floor(Math.random() * fires.length)];
-}
-
-
-function move_plane(jetContainer) {
-	var jet_positionX, jet_positionY;
-	x_mouse_pos = jetContainer.pageX || window.event.clientX;
-	y_mouse_pos = jetContainer.pageY || window.event.clientY;
-	
-	if (selected !== null) {
-		//--this code prevents #jet-container from being moved out of view in the browser.
-		jet_positionX = x_mouse_pos - x_jet;
-		if(jet_positionX >= ctx.canvas.width - jet_id.offsetWidth) {
-			jet_id.style.left = ctx.canvas.width - jet_id.offsetWidth + 'px';
-		}
-		else if(jet_positionX <= 0) {
-			jet_id.style.left = 0 + 'px';
-		}
-		else{
-			jet_id.style.left = jet_positionX + 'px';
-		}
-
-		jet_positionY = y_mouse_pos - y_jet;
-		if(jet_positionY >= ctx.canvas.height - jet_id.offsetHeight) {
-			jet_id.style.top = ctx.canvas.height - jet_id.offsetHeight + 'px';
-		}
-		else if(jet_positionY <= 0) {
-			jet_id.style.top = 0 + 'px';
-		}
-		else {
-			jet_id.style.top = jet_positionY + 'px';
-		}
-	}
-
-}
-
-function let_go() {
-	selected = null;
-}
-document.onmousemove = move_plane;
-document.onmouseup = let_go;
-
-
 //---KEYBOARD CONTROLS
 keyPressed = [];
+
 window.onkeydown = function(input) {
 	keyPressed[input.keyCode] = true;
 }
 window.onkeyup = function(input) {
 	keyPressed[input.keyCode] = false;
 }
+
 jet_id.style.left = 200 + 'px';
 jet_id.style.top = 200 + 'px';
 
 key_speed = 5;
+
 function update_keys() {
 	key_x = parseInt(jet_id.style.left);
 	key_y = parseInt(jet_id.style.top);
@@ -161,5 +107,64 @@ function update_keys() {
 		jet_id.style.top = key_y + 'px';
 	}
 }
-inerval = setInterval(update_keys, 1);
+setInterval(update_keys, 1);
+
+//---MOUSE CONTROLS
+jet_id.onmousedown = function() {
+	grab(this);
+	return false;
+}
+
+function grab(jetContainer) {
+	selected = jetContainer;
+	x_jet = x_mouse_pos - jetContainer.offsetLeft;
+	y_jet = y_mouse_pos - jetContainer.offsetTop;
+}
+
+function random_fire() {
+	var fires = ['fire1.png', 'fire2.png'];
+	return fires[Math.floor(Math.random() * fires.length)];
+}
+
+
+function move_plane(jetContainer) {
+	var jet_positionX, jet_positionY;
+	x_mouse_pos = jetContainer.pageX || window.jetContainer.clientX;
+	y_mouse_pos = jetContainer.pageY || window.jetContainer.clientY;
+	
+	if (selected !== null) {
+		//--this code prevents #jet-container from being moved out of view in the browser.
+		jet_positionX = x_mouse_pos - x_jet;
+		if(jet_positionX >= ctx.canvas.width - jet_id.offsetWidth) {
+			jet_id.style.left = ctx.canvas.width - jet_id.offsetWidth + 'px';
+		}
+		else if(jet_positionX <= 0) {
+			jet_id.style.left = 0 + 'px';
+		}
+		else{
+			jet_id.style.left = jet_positionX + 'px';
+		}
+
+		jet_positionY = y_mouse_pos - y_jet;
+		if(jet_positionY >= ctx.canvas.height - jet_id.offsetHeight) {
+			jet_id.style.top = ctx.canvas.height - jet_id.offsetHeight + 'px';
+		}
+		else if(jet_positionY <= 0) {
+			jet_id.style.top = 0 + 'px';
+		}
+		else {
+			jet_id.style.top = jet_positionY + 'px';
+		}
+	}
+
+}
+
+function let_go() {
+	selected = null;
+}
+
+document.onmousemove = move_plane;
+document.onmouseup = let_go;
+
+
 
