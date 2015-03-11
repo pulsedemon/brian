@@ -1,3 +1,39 @@
+var selected, W, H, BGposX, get_enemy, jet_id, fire, canvas, ctx,
+	speed_x, speed_y, enemy_wrapper,
+	keyPressed, key_x, key_y, key_speed, y_mouse_pos, x_mouse_pos, x_jet, y_jet;
+
+selected = null;
+BGposX = 0;
+jet_id = document.getElementById('jet-container');
+fire = document.getElementById('fire');
+
+canvas = document.getElementById('background-canvas');
+	ctx = canvas.getContext('2d');
+	ctx.canvas.width  = window.innerWidth;
+	ctx.canvas.height = window.innerHeight;
+	
+(function draw_background() {
+	var img;
+	img = new Image();
+	img.src = 'skies.jpg';
+	
+	W = canvas.width;
+	H = canvas.height;
+
+	requestAnimationFrame(draw_background);
+	ctx.clearRect(0, 0, W, H);
+	ctx.drawImage(img, BGposX, 0);
+	ctx.drawImage(img, img.width-Math.abs(BGposX), 0);
+
+	if (Math.abs(BGposX) >= img.width) {
+    	BGposX = 0;
+	}
+
+	BGposX -= 8;
+})();
+
+
+//---ENEMY CREATOR-------//
 var enemies = {
 	enemy1: {
 		w: 100,
@@ -25,73 +61,39 @@ var enemies = {
 	},
 };
 
-var selected, W, H, BGposX, get_enemy, jet_id, fire, canvas, ctx,
-	speed_x, speed_y, enemy_wrapper,
-	keyPressed, key_x, key_y, key_speed, y_mouse_pos, x_mouse_pos, x_jet, y_jet;
-
-selected = null;
-BGposX = 0;
-jet_id = document.getElementById('jet-container');
-fire = document.getElementById('fire');
-
-canvas = document.getElementById('background-canvas');
-	ctx = canvas.getContext('2d');
-	ctx.canvas.width  = window.innerWidth;
-	ctx.canvas.height = window.innerHeight;
-	
-(function draw_background() {
-	var img;
-	W = canvas.width;
-	H = canvas.height;
-	img = new Image();
-	img.src = 'skies.jpg';
-	
-	requestAnimationFrame(draw_background);9
-	ctx.clearRect(0, 0, W, H);
-	ctx.drawImage(img, BGposX, 0);
-	ctx.drawImage(img, img.width-Math.abs(BGposX), 0);
-
-	if (Math.abs(BGposX) >= img.width) {
-    	BGposX = 0;
-	}
-
-	BGposX -= 8;
-})();
-
-
-//---ENEMY CREATOR
 function random_enemies() {
 	var enemy = [enemies.enemy1, enemies.enemy2, enemies.enemy3, enemies.enemy4];
 	return enemy[Math.floor(Math.random() * enemy.length)];
 }
 
 function random_spawn() {
-	var timer = [100, 50, 70, 120, 200];
+	var timer = [300, 1420, 1800];
 	return timer[Math.floor(Math.random() * timer.length)];
 }
 
 speed_x = 3;
 speed_y = 3; 
-counter = 0;
 
 get_enemy = random_enemies();
-spawn_timer = random_spawn();
 
 enemy_wrapper = document.getElementById('enemy-wrapper');
 
 function push_enemy() {
 	var create_enemy;
 	create_enemy = document.createElement('div');
-	create_enemy.className = 'enemy not-moving';
+	create_enemy.className = 'enemy';
 	create_enemy.style.cssText = 'width: '+ get_enemy.w +'px; height:'+ get_enemy.h +'px; top:' + get_enemy.y_pos + 'px; left:' + get_enemy.x_pos + 'px;'; 
 	enemy_wrapper.appendChild(create_enemy);
+	get_enemy = random_enemies();
 }
+setInterval(push_enemy, random_spawn());
 
-function move_enemy() {
+function enemy_init() {
 	select_enemy = document.querySelectorAll('.enemy');
+	if(select_enemy.length > 0) {
+		for(i = 0; i < select_enemy.length; i++) {
 
-	while(select_enemy.length > 0) {
-		for(i = 0; i <= select_enemy.length; i++) {
+			//--ENEMY MOVEMENT
 			enemy_posX = parseInt(select_enemy[i].style.left);
 			enemy_posX -= 3;
 			select_enemy[i].style.left = enemy_posX + 'px';
@@ -102,32 +104,7 @@ function move_enemy() {
 	}	
 }
 
-function create_init() {
-	var select_enemy, enemy_0;
-	counter ++;
-	console.log(canvas.width);
-	// console.log(counter);
-	// console.log(spawn_timer);
-
-	if(counter >= spawn_timer) {
-		counter = 0;
-		push_enemy();
-		get_enemy = random_enemies();
-		spawn_timer = random_spawn();
-	}
-
-	move_enemy();
-	/*if(select_enemy[0] != null) {
-		enemy_0 = parseInt(select_enemy[0].style.left);
-		enemy_0 -= 3;
-		select_enemy[0].style.left = enemy_0 + 'px';
-		if(parseInt(select_enemy[0].style.left) <= 0 - parseInt(select_enemy[0].style.width)) {
-			enemy_wrapper.removeChild(select_enemy[0]);
-		}
-	}*/
-
-}	
-	setInterval(create_init, 100);
+setInterval(enemy_init, 1);
 
 //---KEYBOARD CONTROLS
 function random_thruster_img() {
@@ -212,8 +189,8 @@ function move_plane(jetContainer) {
 	x_mouse_pos = jetContainer.pageX || jetContainer.clientX;
 	y_mouse_pos = jetContainer.pageY || jetContainer.clientY;
 	
+	//--this code prevents #jet-container from being moved out of view in the browser.
 	if (selected !== null) {
-		//--this code prevents #jet-container from being moved out of view in the browser.
 		jet_positionX = x_mouse_pos - x_jet;
 		if(jet_positionX >= ctx.canvas.width - jet_id.offsetWidth) {
 			jet_id.style.left = ctx.canvas.width - jet_id.offsetWidth + 'px';
