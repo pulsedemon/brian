@@ -133,20 +133,20 @@ function update_keys() {
 
 	//--LEFT
 	if (keyPressed[37] || keyPressed[65]) {
-        key_x -= key_speed;
+	    key_x -= key_speed;
 	}
 	//--RIGHT
-    if (keyPressed[39] || keyPressed[68]) {
-        key_x += key_speed;
-    }
-    //--UP
-    if (keyPressed[38] || keyPressed[87]) {
-        key_y -= key_speed;
-    }
-    //--DOWN
-    if (keyPressed[40] || keyPressed[83]) {
-        key_y += key_speed;
-    }
+	if (keyPressed[39] || keyPressed[68]) {
+	    key_x += key_speed;
+	}
+	//--UP
+	if (keyPressed[38] || keyPressed[87]) {
+	    key_y -= key_speed;
+	}
+	//--DOWN
+	if (keyPressed[40] || keyPressed[83]) {
+	    key_y += key_speed;
+	}
 
     //--this code prevents #jet-container from being moved out of view in the browser.
 	if(key_x >= ctx.canvas.width - jet_id.offsetWidth) {
