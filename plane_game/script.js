@@ -85,7 +85,7 @@ var counter = 0;
 function push_enemy() {
 	var create_enemy;
 	counter ++;
-	if(counter === spawn_timer) {
+	if(counter >= spawn_timer) {
 		create_enemy = document.createElement('div');
 		create_enemy.className = 'enemy';
 		create_enemy.style.cssText = 'width: '+ get_enemy.w +'px; height:'+ get_enemy.h +'px; top:' + get_enemy.y_pos + 'px; left:' + get_enemy.x_pos + 'px;'; 
@@ -103,27 +103,9 @@ function init_enemy() {
 		for(i = 0; i < select_enemy.length; i++) {
 			var enemy_x, enemy_y, enemy_w, enemy_h, jet_x, jet_y, jet_w, jet_y;
 
-			enemy_x = select_enemy[i].style.left;
-			enemy_y = select_enemy[i].style.top;
-			enemy_w = select_enemy[i].offsetWidth;
-			enemy_h = select_enemy[i].offsetHeight;
-
-			jet_x = jet_id.style.left;
-			jet_y = jet_id.style.top;
-			jet_w = jet_id.offsetWidth;
-			jet_h = jet_id.offsetHeight;
-			
-			//--COLLISION DETECTION
-			if(enemy_x < jet_x + jet_w &&
-			enemy_x + enemy_w > jet_x &&
-			enemy_y < jet_y + jet_h &&
-			enemy_h + enemy_y > jet_y) {
-				alert('collision');	
-
-			}
 			//--ENEMY MOVEMENT
 			enemy_posX = parseInt(select_enemy[i].style.left);
-			enemy_posX -= 3;
+			enemy_posX -= 1;
 			select_enemy[i].style.left = enemy_posX + 'px';
 			if(parseInt(select_enemy[i].style.left) <= 0 - parseInt(select_enemy[i].style.width)) {
 				enemy_wrapper.removeChild(select_enemy[i]);
@@ -133,6 +115,40 @@ function init_enemy() {
 }
 
 var init_interval = setInterval(init_enemy, 1);
+			
+//--COLLISION DETECTION
+function detect_collision() {
+	select_enemy = document.querySelectorAll('.enemy');
+	for(i = 0; i < select_enemy.length; i++) {
+		enemy_x = parseInt(select_enemy[i].style.left);
+		enemy_y = parseInt(select_enemy[i].style.top);
+		enemy_w = parseInt(select_enemy[i].offsetWidth);
+		enemy_h = parseInt(select_enemy[i].offsetHeight);
+
+		jet_x = parseInt(jet_id.style.left);
+		jet_y = parseInt(jet_id.style.top);
+		jet_w = parseInt(jet_id.offsetWidth);
+		jet_h = parseInt(jet_id.offsetHeight);
+
+		if(enemy_x < (jet_x + jet_w) &&
+		(enemy_x + enemy_w) > jet_x &&
+		enemy_y < (jet_y + jet_h) &&
+		(enemy_h + enemy_y) > jet_y) {
+			clearInterval(init_interval);
+
+		}
+		
+	}
+	
+}
+var collision_interval = setInterval(detect_collision, 100);
+
+/*if(enemy_x + enemy_w < jet_x ||
+	enemy_x > jet_x + jet_w ||
+	enemy_y + enemy_h < jet_y ||
+	enemy_y > jet_y + jet_h) {
+		alert('collision');
+}*/
 
 //---KEYBOARD CONTROLS
 function random_thruster_img() {
@@ -178,20 +194,20 @@ function update_keys() {
 
     //--this code prevents #jet-container from being moved out of view in the browser.
 	if(key_x >= ctx.canvas.width - jet_id.offsetWidth) {
-		key_x = ctx.canvas.width - jet_id.offsetWidth;
+		jet_id.style.left = ctx.canvas.width - jet_id.offsetWidth + 'px';
 	}
 	else if(key_x <= 0) {
-		key_x = 0;
+		jet_id.style.left = 0;
 	}
 	else{
 		jet_id.style.left = key_x + 'px';
 	}
 
 	if(key_y >= ctx.canvas.height - jet_id.offsetHeight) {
-		key_y = ctx.canvas.height - jet_id.offsetHeight;
+		jet_id.style.top = ctx.canvas.height - jet_id.offsetHeight + 'px';
 	}
 	else if(key_y <= 0) {
-		key_y = 0;
+		jet_id.style.top = 0;
 	}
 	else {
 		jet_id.style.top = key_y + 'px';
@@ -224,7 +240,7 @@ function move_plane(jetContainer) {
 			jet_id.style.left = ctx.canvas.width - jet_id.offsetWidth + 'px';
 		}
 		else if(jet_positionX <= 0) {
-			jet_id.style.left = 0 + 'px';
+			jet_id.style.left = 0;
 		}
 		else{
 			jet_id.style.left = jet_positionX + 'px';
@@ -235,7 +251,7 @@ function move_plane(jetContainer) {
 			jet_id.style.top = ctx.canvas.height - jet_id.offsetHeight + 'px';
 		}
 		else if(jet_positionY <= 0) {
-			jet_id.style.top = 0 + 'px';
+			jet_id.style.top = 0;
 		}
 		else {
 			jet_id.style.top = jet_positionY + 'px';
