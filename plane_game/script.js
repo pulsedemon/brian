@@ -161,7 +161,6 @@ function game_over() {
 	setTimeout (function() {
 		clearInterval(collision_interval);
 	}, 1000);
-	// clearInterval(collision_interval);
 }
 
 //---KEYBOARD CONTROLS
