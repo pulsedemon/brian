@@ -60,12 +60,15 @@ body {
 	z-index: 2;
 	background: #000000;
 }
+#enemy-hidden {
+	background: none;
+}
 #jet-container {
 	width: 254px;
 	height: 80px;
 	position: absolute;
 	cursor: move;
-	z-index: 5;
+	z-index: 6;
 }
 #jet-1 {
 	width: 235px;
@@ -82,4 +85,26 @@ body {
 	position: absolute;
 	margin-top: 37px;
 	z-index: 3;
+}
+#explosion {
+	z-index: 5;
+	background: url(explosion.png);
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-top: -256px;
+	margin-left: -256px;
+	width: 512px;
+	height: 512px;
+}
+#explosion-enemy {
+	z-index: 5;
+	background: url(explosion.png);
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -256px;
+	margin-top: -256px;
+	width: 512px;
+	height: 512px;
 }

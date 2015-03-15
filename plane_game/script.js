@@ -1,11 +1,15 @@
 var selected, W, H, BGposX, get_enemy, jet_id, thruster, canvas, ctx,
-	speed_x, speed_y, enemy_wrapper, select_enemy,
+	speed_x, speed_y, enemy_wrapper, counter, select_enemy, canvas_wrapper,
 	keyPressed, key_x, key_y, key_speed, y_mouse_pos, x_mouse_pos, x_jet, y_jet;
 
 selected = null;
 BGposX = 0;
 jet_id = document.getElementById('jet-container');
 thruster = document.getElementById('thruster');
+
+function game_start() {
+	draw_background();
+}
 
 canvas = document.getElementById('background-canvas');
 	ctx = canvas.getContext('2d');
@@ -19,9 +23,10 @@ img.src = 'skies.jpg';
 
 W = window.innerWidth;
 H = window.innerHeight;
+var background_animframe;
 
 function draw_background() {
-	requestAnimationFrame(draw_background);
+	background_animframe = requestAnimationFrame(draw_background);
 	ctx.clearRect(0, 0, W, H);
 	ctx.drawImage(img, BGposX, 0);
 	ctx.drawImage(img, img.width-Math.abs(BGposX), 0);
@@ -29,11 +34,9 @@ function draw_background() {
 	if (Math.abs(BGposX) === img.width) {
     	BGposX = 0;
 	}
-
 	BGposX -= 8;
 }
 draw_background();
-
 
 //---ENEMY CREATOR-------//
 var enemies = {
@@ -73,14 +76,11 @@ function random_spawn() {
 	return timer[Math.floor(Math.random() * timer.length)];
 }
 
-speed_x = 3;
-speed_y = 3; 
-
 get_enemy = random_enemies();
 spawn_timer = random_spawn();
 
 enemy_wrapper = document.getElementById('enemy-wrapper');
-var counter = 0;
+counter = 0;
 
 function push_enemy() {
 	var create_enemy;
@@ -95,17 +95,16 @@ function push_enemy() {
 		counter = 0;
 	}
 }
-var push_interval = setInterval(push_enemy, 500);
+var push_interval = setInterval(push_enemy, 100);
 
-function init_enemy() {
+function move_enemy() {
 	select_enemy = document.querySelectorAll('.enemy');
 	if(select_enemy.length > 0) {
 		for(i = 0; i < select_enemy.length; i++) {
-			var enemy_x, enemy_y, enemy_w, enemy_h, jet_x, jet_y, jet_w, jet_y;
 
 			//--ENEMY MOVEMENT
 			enemy_posX = parseInt(select_enemy[i].style.left);
-			enemy_posX -= 1;
+			enemy_posX -= 2;
 			select_enemy[i].style.left = enemy_posX + 'px';
 			if(parseInt(select_enemy[i].style.left) <= 0 - parseInt(select_enemy[i].style.width)) {
 				enemy_wrapper.removeChild(select_enemy[i]);
@@ -113,42 +112,57 @@ function init_enemy() {
 		}
 	}	
 }
-
-var init_interval = setInterval(init_enemy, 1);
+var move_interval = setInterval(move_enemy, 1);
 			
-//--COLLISION DETECTION
+//---COLLISION DETECTION
 function detect_collision() {
+	var enemy_x, enemy_y, enemy_w, enemy_h, jet_x, jet_y, jet_w, jet_y, explosion;
 	select_enemy = document.querySelectorAll('.enemy');
 	for(i = 0; i < select_enemy.length; i++) {
 		enemy_x = parseInt(select_enemy[i].style.left);
 		enemy_y = parseInt(select_enemy[i].style.top);
-		enemy_w = parseInt(select_enemy[i].offsetWidth);
-		enemy_h = parseInt(select_enemy[i].offsetHeight);
+		enemy_w = select_enemy[i].offsetWidth;
+		enemy_h = select_enemy[i].offsetHeight;
 
 		jet_x = parseInt(jet_id.style.left);
 		jet_y = parseInt(jet_id.style.top);
-		jet_w = parseInt(jet_id.offsetWidth);
-		jet_h = parseInt(jet_id.offsetHeight);
+		jet_w = jet_id.offsetWidth;
+		jet_h = jet_id.offsetHeight;
+
+		counter = 0;
 
 		if(enemy_x < (jet_x + jet_w) &&
 		(enemy_x + enemy_w) > jet_x &&
 		enemy_y < (jet_y + jet_h) &&
 		(enemy_h + enemy_y) > jet_y) {
-			clearInterval(init_interval);
-
-		}
-		
-	}
-	
+			select_enemy[i].id = 'enemy-hidden';
+			explosion = document.createElement('div');
+			explosion.id = 'explosion-enemy';
+			select_enemy[i].appendChild(explosion);
+			game_over();
+		}	
+	}	
 }
 var collision_interval = setInterval(detect_collision, 100);
 
-/*if(enemy_x + enemy_w < jet_x ||
-	enemy_x > jet_x + jet_w ||
-	enemy_y + enemy_h < jet_y ||
-	enemy_y > jet_y + jet_h) {
-		alert('collision');
-}*/
+function jet_explosion() {
+	var explosion;
+	explosion = document.createElement('div');
+	explosion.id = 'explosion';
+	jet_id.appendChild(explosion);
+}
+
+function game_over() {
+	clearInterval(move_interval);
+	cancelAnimationFrame(background_animframe);
+	clearInterval(push_interval);
+	clearInterval(key_interval);
+	jet_explosion();
+	setTimeout (function() {
+		clearInterval(collision_interval);
+	}, 1000);
+	// clearInterval(collision_interval);
+}
 
 //---KEYBOARD CONTROLS
 function random_thruster_img() {
@@ -192,7 +206,7 @@ function update_keys() {
 	    key_y += key_speed;
 	}
 
-    //--this code prevents #jet-container from being moved out of view in the browser.
+    //--MOVEMENT PARAMETERS.
 	if(key_x >= ctx.canvas.width - jet_id.offsetWidth) {
 		jet_id.style.left = ctx.canvas.width - jet_id.offsetWidth + 'px';
 	}
@@ -233,7 +247,7 @@ function move_plane(jetContainer) {
 	x_mouse_pos = jetContainer.pageX || jetContainer.clientX;
 	y_mouse_pos = jetContainer.pageY || jetContainer.clientY;
 	
-	//--this code prevents #jet-container from being moved out of view in the browser.
+	//--MOVEMENT PARAMETERS
 	if (selected !== null) {
 		jet_positionX = x_mouse_pos - x_jet;
 		if(jet_positionX >= ctx.canvas.width - jet_id.offsetWidth) {
