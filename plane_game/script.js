@@ -1,29 +1,57 @@
-var selected, W, H, BGposX, get_enemy, jet_id, thruster, canvas, ctx,
+var	img, img_explosion, img_fire1, img_fire2, img_fire3, img_jet,
+	background_animframe, enemy_animframe,
+	get_enemy,
+	selected, W, H, BGposX, jet_id, thruster, canvas, ctx,
 	speed_x, speed_y, enemy_wrapper, counter, select_enemy, canvas_wrapper,
-	keyPressed, key_x, key_y, key_speed, y_mouse_pos, x_mouse_pos, x_jet, y_jet;
+	keyPressed, key_speed, y_mouse_pos, x_mouse_pos, x_jet, y_jet;
+
+img = new Image();
+img.onload = function() {
+}
+img.src = 'skies.jpg';
+
+img_explosion = new Image();
+img_explosion.onload = function() {
+}
+img_explosion.src = 'explosion.png';
+
+img_fire1 = new Image();
+img_fire1.onload = function() {
+}
+img_fire1.src = 'fire1.png';
+
+img_fire2 = new Image();
+img_fire2.onload = function() {
+}
+img_fire2.src = 'fire2.png';
+
+img_fire3 = new Image();
+img_fire3.onload = function() {
+}
+img_fire3.src = 'fire3-tiny.png';
+
+img_jet = new Image();
+img_jet.onload = function() {
+}
+img_jet.src = 'jet.png';
 
 selected = null;
 BGposX = 0;
 jet_id = document.getElementById('jet-container');
 thruster = document.getElementById('thruster');
 
-function game_start() {
+/*function game_start() {
 	draw_background();
-}
+}*/
 
 canvas = document.getElementById('background-canvas');
 	ctx = canvas.getContext('2d');
 	ctx.canvas.width  = window.innerWidth;
 	ctx.canvas.height = window.innerHeight;
 	
-var img = new Image();
-img.onload = function() {
-}
-img.src = 'skies.jpg';
 
 W = window.innerWidth;
 H = window.innerHeight;
-var background_animframe;
 
 function draw_background() {
 	background_animframe = requestAnimationFrame(draw_background);
@@ -39,45 +67,35 @@ function draw_background() {
 draw_background();
 
 //---ENEMY CREATOR-------//
-var enemies = {
-	enemy1: {
-		w: 100,
-		h: 50,
-		y_pos: 400,
-		x_pos: window.innerWidth,
-	},
-	enemy2: {
-		w: 50,
-		h: 50,
-		y_pos: 100,
-		x_pos: window.innerWidth,
-	},
-	enemy3: {
-		w: 150,
-		h: 200,
-		y_pos: 100,
-		x_pos: window.innerWidth,		
-	},
-	enemy4: {
-		w: 100,
-		h: 300,
-		y_pos: 300,
-		x_pos: window.innerWidth,		
-	},
-};
+var enemy1, enemy2, enemy3, enemy4;
+
+function enemies(w, h) {
+	this.w = w;
+	this.h = h;
+	this.x_pos = window.innerWidth;
+}
+
+enemy1 = new enemies(200, 100);
+enemy2 = new enemies(250, 150);
+enemy3 = new enemies(150, 200);
+enemy4 = new enemies(100, 300);
+
+function random_y_pos() {
+	var y_pos = [10, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900];
+	return y_pos[Math.floor(Math.random() * y_pos.length)];
+}
 
 function random_enemies() {
-	var enemy = [enemies.enemy1, enemies.enemy2, enemies.enemy3, enemies.enemy4];
+	var enemy = [enemy1, enemy2, enemy3, enemy4];
 	return enemy[Math.floor(Math.random() * enemy.length)];
 }
 
 function random_spawn() {
-	var timer = [1, 1, 2, 3, 4];
+	var timer = [1, 2, 3];
 	return timer[Math.floor(Math.random() * timer.length)];
 }
 
 get_enemy = random_enemies();
-spawn_timer = random_spawn();
 
 enemy_wrapper = document.getElementById('enemy-wrapper');
 counter = 0;
@@ -85,34 +103,46 @@ counter = 0;
 function push_enemy() {
 	var create_enemy;
 	counter ++;
-	if(counter >= spawn_timer) {
+	if(counter >= random_spawn()) {
 		create_enemy = document.createElement('div');
 		create_enemy.className = 'enemy';
-		create_enemy.style.cssText = 'width: '+ get_enemy.w +'px; height:'+ get_enemy.h +'px; top:' + get_enemy.y_pos + 'px; left:' + get_enemy.x_pos + 'px;'; 
+		create_enemy.style.cssText = 'width: '+ get_enemy.w +'px; height:'+ get_enemy.h +'px; top:' + random_y_pos() + 'px; left:' + get_enemy.x_pos + 'px;'; 
 		enemy_wrapper.appendChild(create_enemy);
 		get_enemy = random_enemies();
-		spawn_timer = random_spawn();
+		random_spawn();
 		counter = 0;
 	}
 }
-var push_interval = setInterval(push_enemy, 100);
+var push_interval = setInterval(push_enemy, 200);
 
 function move_enemy() {
+	var enemy_x_pos, enemy_y_pos;
+	enemy_animframe = requestAnimationFrame(move_enemy);
 	select_enemy = document.querySelectorAll('.enemy');
 	if(select_enemy.length > 0) {
 		for(i = 0; i < select_enemy.length; i++) {
-
-			//--ENEMY MOVEMENT
-			enemy_posX = parseInt(select_enemy[i].style.left);
-			enemy_posX -= 2;
-			select_enemy[i].style.left = enemy_posX + 'px';
+			enemy_x_pos = parseInt(select_enemy[i].style.left);
+			enemy_x_pos -= 15;
+			select_enemy[i].style.left = enemy_x_pos + 'px';
 			if(parseInt(select_enemy[i].style.left) <= 0 - parseInt(select_enemy[i].style.width)) {
 				enemy_wrapper.removeChild(select_enemy[i]);
 			}
+
+			/*enemy_y_pos = parseInt(select_enemy[i].style.top);
+			select_enemy[i].style.top = enemy_y_pos + 'px';
+			if(parseInt(select_enemy[i].style.top) >= 2) {
+				enemy_y_pos -= 2;
+				select_enemy[i].style.top = enemy_y_pos + 'px';	
+				if(parseInt(select_enemy[i].style.top) <= 0) {
+					enemy_y_pos = parseInt(select_enemy[i].style.top);
+					enemy_y_pos += 2;
+					select_enemy[i].style.top = enemy_y_pos + 'px';
+				}
+			}*/	
 		}
 	}	
 }
-var move_interval = setInterval(move_enemy, 1);
+move_enemy();
 			
 //---COLLISION DETECTION
 function detect_collision() {
@@ -139,11 +169,12 @@ function detect_collision() {
 			explosion = document.createElement('div');
 			explosion.id = 'explosion-enemy';
 			select_enemy[i].appendChild(explosion);
+			selected = null;
 			game_over();
 		}	
 	}	
 }
-var collision_interval = setInterval(detect_collision, 100);
+var collision_interval = setInterval(detect_collision, 10);
 
 function jet_explosion() {
 	var explosion;
@@ -153,14 +184,25 @@ function jet_explosion() {
 }
 
 function game_over() {
-	clearInterval(move_interval);
-	cancelAnimationFrame(background_animframe);
-	clearInterval(push_interval);
-	clearInterval(key_interval);
-	jet_explosion();
+	setTimeout (function() {
+		jet_explosion();
+	}, 200);
+
 	setTimeout (function() {
 		clearInterval(collision_interval);
 	}, 1000);
+
+	cancelAnimationFrame(background_animframe);
+	cancelAnimationFrame(enemy_animframe);
+	clearInterval(push_interval);
+	clearInterval(key_interval);
+
+	jet_id.onmousedown = function() {
+		return false;
+	}
+	document.ontouchmove = function() {
+		return false;
+	}
 }
 
 //---KEYBOARD CONTROLS
@@ -183,6 +225,7 @@ jet_id.style.top = 200 + 'px';
 key_speed = 5;
 
 function update_keys() {
+	var key_x, key_y;
 	key_x = parseInt(jet_id.style.left);
 	key_y = parseInt(jet_id.style.top);
 
@@ -230,6 +273,7 @@ function update_keys() {
 var key_interval = setInterval(update_keys, 1);
 
 //---MOUSE CONTROLS
+
 jet_id.onmousedown = function() {
 	grab(this);
 	return false;
@@ -270,7 +314,6 @@ function move_plane(jetContainer) {
 			jet_id.style.top = jet_positionY + 'px';
 		}
 	}
-
 }
 
 function let_go() {
@@ -279,6 +322,27 @@ function let_go() {
 
 document.onmousemove = move_plane;
 document.onmouseup = let_go;
+
+//---TOUCH SCREEN CONTROLS
+function touch_move(jetContainer) {
+	if(jetContainer.touches.length === 1) {
+		var touch;
+		touch = jetContainer.touches[0];
+		jet_id.style.left = touch.pageX + 'px';
+		jet_id.style.top = touch.pageY + 'px';	
+	}
+}
+
+document.ontouchmove = touch_move;
+/*jet_id.ontouchmove = function(jetContainer) {
+	if(jetContainer.touches.length === 1) {
+		var touch;
+		touch = jetContainer.touches[0];
+		jet_id.style.left = touch.pageX + 'px';
+		jet_id.style.top = touch.pageY + 'px';	
+	}
+}*/
+
 
 
 
