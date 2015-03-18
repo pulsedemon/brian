@@ -1,8 +1,8 @@
 var	img, img_explosion, img_fire1, img_fire2, img_fire3, img_jet,
 	background_animframe, enemy_animframe,
-	get_enemy,
+	get_enemy, push_interval,
 	selected, W, H, BGposX, jet_id, thruster, canvas, ctx,
-	speed_x, speed_y, enemy_wrapper, counter, select_enemy, canvas_wrapper,
+	enemy_wrapper, counter, button, menu, select_enemy,
 	keyPressed, key_speed, y_mouse_pos, x_mouse_pos, x_jet, y_jet;
 
 img = new Image();
@@ -40,9 +40,6 @@ BGposX = 0;
 jet_id = document.getElementById('jet-container');
 thruster = document.getElementById('thruster');
 
-/*function game_start() {
-	draw_background();
-}*/
 
 canvas = document.getElementById('background-canvas');
 	ctx = canvas.getContext('2d');
@@ -65,6 +62,21 @@ function draw_background() {
 	BGposX -= 8;
 }
 draw_background();
+
+//---MENU
+button = document.getElementById('menu-button');
+menu = document.getElementById('menu');
+
+button.addEventListener('click', handler_start);
+
+function handler_start(e) {
+	e.target.removeEventListener(e.type, arguments.callee);
+	menu.className = 'menu-hide';
+	button.className = 'menu-hide';
+	setTimeout (function() {
+		push_interval = setInterval(push_enemy, 200);
+	}, 2000);
+}
 
 //---ENEMY CREATOR-------//
 var enemy1, enemy2, enemy3, enemy4;
@@ -100,6 +112,7 @@ get_enemy = random_enemies();
 enemy_wrapper = document.getElementById('enemy-wrapper');
 counter = 0;
 
+
 function push_enemy() {
 	var create_enemy;
 	counter ++;
@@ -113,12 +126,13 @@ function push_enemy() {
 		counter = 0;
 	}
 }
-var push_interval = setInterval(push_enemy, 200);
+
+select_enemy = document.querySelectorAll('.enemy');
 
 function move_enemy() {
 	var enemy_x_pos, enemy_y_pos;
-	enemy_animframe = requestAnimationFrame(move_enemy);
 	select_enemy = document.querySelectorAll('.enemy');
+	enemy_animframe = requestAnimationFrame(move_enemy);
 	if(select_enemy.length > 0) {
 		for(i = 0; i < select_enemy.length; i++) {
 			enemy_x_pos = parseInt(select_enemy[i].style.left);
@@ -127,18 +141,6 @@ function move_enemy() {
 			if(parseInt(select_enemy[i].style.left) <= 0 - parseInt(select_enemy[i].style.width)) {
 				enemy_wrapper.removeChild(select_enemy[i]);
 			}
-
-			/*enemy_y_pos = parseInt(select_enemy[i].style.top);
-			select_enemy[i].style.top = enemy_y_pos + 'px';
-			if(parseInt(select_enemy[i].style.top) >= 2) {
-				enemy_y_pos -= 2;
-				select_enemy[i].style.top = enemy_y_pos + 'px';	
-				if(parseInt(select_enemy[i].style.top) <= 0) {
-					enemy_y_pos = parseInt(select_enemy[i].style.top);
-					enemy_y_pos += 2;
-					select_enemy[i].style.top = enemy_y_pos + 'px';
-				}
-			}*/	
 		}
 	}	
 }
@@ -147,7 +149,6 @@ move_enemy();
 //---COLLISION DETECTION
 function detect_collision() {
 	var enemy_x, enemy_y, enemy_w, enemy_h, jet_x, jet_y, jet_w, jet_y, explosion;
-	select_enemy = document.querySelectorAll('.enemy');
 	for(i = 0; i < select_enemy.length; i++) {
 		enemy_x = parseInt(select_enemy[i].style.left);
 		enemy_y = parseInt(select_enemy[i].style.top);
@@ -158,6 +159,7 @@ function detect_collision() {
 		jet_y = parseInt(jet_id.style.top);
 		jet_w = jet_id.offsetWidth;
 		jet_h = jet_id.offsetHeight;
+
 
 		counter = 0;
 
@@ -172,18 +174,39 @@ function detect_collision() {
 			selected = null;
 			game_over();
 		}	
+
+		//--RUDDER COLLISION
+		rudder_x = parseInt(jet_id.style.left);
+		rudder_y = parseInt(jet_id.style.top) - 38;
+		rudder_w = 43;
+		rudder_h = 38;
+
+		if(enemy_x < (rudder_x + rudder_w) &&
+		(enemy_x + enemy_w) > rudder_x &&
+		enemy_y < (rudder_y + rudder_h) &&
+		(enemy_h + enemy_y) > rudder_y) {
+			select_enemy[i].id = 'enemy-hidden';
+			explosion = document.createElement('div');
+			explosion.id = 'explosion-enemy';
+			select_enemy[i].appendChild(explosion);
+			selected = null;
+			game_over();
+		}	
 	}	
 }
-var collision_interval = setInterval(detect_collision, 10);
+var collision_interval = setInterval(detect_collision, 1);
 
 function jet_explosion() {
 	var explosion;
 	explosion = document.createElement('div');
-	explosion.id = 'explosion';
+	explosion.className = 'explosion';
 	jet_id.appendChild(explosion);
 }
 
+canvas_wrapper = document.getElementById('canvas-wrapper');
+
 function game_over() {
+	var explosion;
 	setTimeout (function() {
 		jet_explosion();
 	}, 200);
@@ -203,6 +226,52 @@ function game_over() {
 	document.ontouchmove = function() {
 		return false;
 	}
+
+	setTimeout (function() {
+		menu.className = 'menu-show';
+		button.className = 'menu-show';	
+		button.innerHTML = 'Retry';
+	}, 2000);
+	setTimeout (function() {
+		button.addEventListener('click', handler_retry);
+	}, 3000);
+}
+
+function handler_retry(e) {
+	e.target.removeEventListener(e.type, arguments.callee);
+	restart();
+}
+
+function restart() {
+	var select_explosion;
+	menu.className = 'menu-hide';
+	button.className = 'menu-hide';
+
+	background_animframe = requestAnimationFrame(draw_background);
+	enemy_animframe = requestAnimationFrame(move_enemy);
+	key_interval = setInterval(update_keys, 1);
+	collision_interval = setInterval(detect_collision, 1);
+
+	setTimeout (function() {
+		push_interval = setInterval(push_enemy, 200);
+	}, 2000);
+
+	select_explosion = document.querySelectorAll('.explosion');
+	for(i = 0; i < select_explosion.length; i++) {
+		jet_id.removeChild(select_explosion[i]);
+	}
+
+	for(i = 0; i < select_enemy.length; i++) {
+		enemy_wrapper.removeChild(select_enemy[i]);
+	}
+
+	jet_id.onmousedown = function() {
+		grab(this);
+		return false;
+	}
+	document.ontouchmove = touch_move;
+	jet_id.style.left = 200 + 'px';
+	jet_id.style.top = 200 + 'px'; 	
 }
 
 //---KEYBOARD CONTROLS
@@ -215,7 +284,12 @@ keyPressed = [];
 
 window.onkeydown = function(input) {
 	keyPressed[input.keyCode] = true;
+		
+	if(input.keyCode === 13) {
+		button.click();
+	}
 }
+
 window.onkeyup = function(input) {
 	keyPressed[input.keyCode] = false;
 }
@@ -262,8 +336,8 @@ function update_keys() {
 	if(key_y >= ctx.canvas.height - jet_id.offsetHeight) {
 		jet_id.style.top = ctx.canvas.height - jet_id.offsetHeight + 'px';
 	}
-	else if(key_y <= 0) {
-		jet_id.style.top = 0;
+	else if(key_y <= 0 + 38) {
+		jet_id.style.top = 38 + 'px';
 	}
 	else {
 		jet_id.style.top = key_y + 'px';
@@ -307,8 +381,8 @@ function move_plane(jetContainer) {
 		if(jet_positionY >= ctx.canvas.height - jet_id.offsetHeight) {
 			jet_id.style.top = ctx.canvas.height - jet_id.offsetHeight + 'px';
 		}
-		else if(jet_positionY <= 0) {
-			jet_id.style.top = 0;
+		else if(jet_positionY <= 0 + 38) {
+			jet_id.style.top = 0 + 38;
 		}
 		else {
 			jet_id.style.top = jet_positionY + 'px';
@@ -334,15 +408,3 @@ function touch_move(jetContainer) {
 }
 
 document.ontouchmove = touch_move;
-/*jet_id.ontouchmove = function(jetContainer) {
-	if(jetContainer.touches.length === 1) {
-		var touch;
-		touch = jetContainer.touches[0];
-		jet_id.style.left = touch.pageX + 'px';
-		jet_id.style.top = touch.pageY + 'px';	
-	}
-}*/
-
-
-
-

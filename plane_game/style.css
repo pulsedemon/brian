@@ -37,10 +37,57 @@ img {
 html {
 	height: 100%;
 	width: 100%;
+	font-family: sans-serif;
 }
 body {
 	height: 100%;
 	width: 100%;
+}
+#menu {
+	border: 5px solid #000000;
+	opacity: 0.9;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 290px;
+	height: 220px;
+	margin-left: -145px;
+	margin-top: -110px;
+	background: #009933;
+	z-index: 97;
+}
+#menu-layer {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	width: 220px;
+	height: 150px;
+	margin-left: -110px;
+	margin-top: -75px;
+	background: #000000;
+	z-index: 96;
+}
+#menu-button {
+	font-family: verdana;
+	font-weight: bold;
+	font-size: 36px;
+	border: 2px solid #ffffff;
+	color: #ffffff;
+	width: 140px;
+	height: 80px;
+	position: relative;
+	left: 50%;
+	top: 50%;
+	margin-top: -40px;
+	margin-left: -70px;
+	background: #313131;
+	z-index: 98;
+}
+.menu-show {
+	display: block;
+}
+.menu-hide {
+	display: none;
 }
 #canvas-wrapper {
 	overflow: hidden;
@@ -53,7 +100,7 @@ body {
 	width: 100%;
 	height: 100%;
 	position: absolute;
-	z-index: 1;
+	z-index: 2;
 }
 .enemy {
 	position: absolute;
@@ -64,18 +111,25 @@ body {
 	background: none;
 }
 #jet-container {
-	width: 254px;
-	height: 80px;
+	width: 235px;
+	height: 42px;
 	position: absolute;
 	cursor: move;
-	z-index: 6;
+	z-index: 7;
+}
+#jet-top {
+	width: 235px;
+	height: 38px;
+	background: url(jet-top.png);
+	position: absolute;
+	z-index: 5;
+	margin-top: -38px;
 }
 #jet-1 {
 	width: 235px;
-	height: 80px;
-	background: url(jet.png);
+	height: 42px;
+	background: url(jet-bottom.png);
 	position: absolute;
-	right: 0;
 	z-index: 4;
 }
 #thruster {
@@ -83,11 +137,12 @@ body {
 	height: 30px;
 	background: url(fire3-tiny.png);
 	position: absolute;
-	margin-top: 37px;
+	margin-top: -2px;
+	margin-left: -17px;
 	z-index: 3;
 }
-#explosion {
-	z-index: 5;
+.explosion {
+	z-index: 6;
 	background: url(explosion.png);
 	position: absolute;
 	left: 50%;
