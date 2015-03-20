@@ -1,9 +1,9 @@
 var	img, img_explosion, img_fire1, img_fire2, img_fire3, img_jet,
+	W, H, BGposX, jet_id, thruster, canvas, ctx,
 	background_animframe, enemy_animframe,
 	get_enemy, push_interval,
-	selected, W, H, BGposX, jet_id, thruster, canvas, ctx,
-	enemy_wrapper, counter, button, menu, select_enemy,
-	keyPressed, key_speed, y_mouse_pos, x_mouse_pos, x_jet, y_jet;
+	enemy_wrapper, counter, start_button, menu, retry_button, select_enemy,
+	keyPressed, key_speed, selected, y_mouse_pos, x_mouse_pos, x_jet, y_jet;
 
 img = new Image();
 img.onload = function() {
@@ -63,19 +63,18 @@ function draw_background() {
 }
 draw_background();
 
-//---MENU
-button = document.getElementById('menu-button');
+//---START-MENU
+start_button = document.getElementById('start-menu-button');
 menu = document.getElementById('menu');
 
-button.addEventListener('click', handler_start);
 
-function handler_start(e) {
-	e.target.removeEventListener(e.type, arguments.callee);
+start_button.onclick = function start() {
 	menu.className = 'menu-hide';
-	button.className = 'menu-hide';
+	menu.removeChild(start_button);
 	setTimeout (function() {
 		push_interval = setInterval(push_enemy, 200);
 	}, 2000);
+	start_button = null;
 }
 
 //---ENEMY CREATOR-------//
@@ -86,7 +85,6 @@ function enemies(w, h) {
 	this.h = h;
 	this.x_pos = window.innerWidth;
 }
-
 enemy1 = new enemies(200, 100);
 enemy2 = new enemies(250, 150);
 enemy3 = new enemies(150, 200);
@@ -147,6 +145,7 @@ function move_enemy() {
 move_enemy();
 			
 //---COLLISION DETECTION
+
 function detect_collision() {
 	var enemy_x, enemy_y, enemy_w, enemy_h, jet_x, jet_y, jet_w, jet_y, explosion;
 	for(i = 0; i < select_enemy.length; i++) {
@@ -160,41 +159,50 @@ function detect_collision() {
 		jet_w = jet_id.offsetWidth;
 		jet_h = jet_id.offsetHeight;
 
+		rudder_x = parseInt(jet_id.style.left);
+		rudder_y = parseInt(jet_id.style.top) - 38;
+		rudder_w = 43;
+		rudder_h = 38;
 
 		counter = 0;
 
 		if(enemy_x < (jet_x + jet_w) &&
 		(enemy_x + enemy_w) > jet_x &&
 		enemy_y < (jet_y + jet_h) &&
-		(enemy_h + enemy_y) > jet_y) {
-			select_enemy[i].id = 'enemy-hidden';
-			explosion = document.createElement('div');
-			explosion.id = 'explosion-enemy';
-			select_enemy[i].appendChild(explosion);
-			selected = null;
-			game_over();
-		}	
-
+		(enemy_h + enemy_y) > jet_y || 
+		
 		//--RUDDER COLLISION
-		rudder_x = parseInt(jet_id.style.left);
-		rudder_y = parseInt(jet_id.style.top) - 38;
-		rudder_w = 43;
-		rudder_h = 38;
-
-		if(enemy_x < (rudder_x + rudder_w) &&
+		enemy_x < (rudder_x + rudder_w) &&
 		(enemy_x + enemy_w) > rudder_x &&
 		enemy_y < (rudder_y + rudder_h) &&
 		(enemy_h + enemy_y) > rudder_y) {
 			select_enemy[i].id = 'enemy-hidden';
-			explosion = document.createElement('div');
-			explosion.id = 'explosion-enemy';
-			select_enemy[i].appendChild(explosion);
 			selected = null;
 			game_over();
 		}	
 	}	
 }
 var collision_interval = setInterval(detect_collision, 1);
+
+//---GAME-OVER FUNCTIONS
+function enemy_explosion() {
+	for(i = 0; i < select_enemy.length; i++) {
+		if(select_enemy[i].id === 'enemy-hidden') {
+			explosion = document.createElement('div');
+			explosion.className = 'explosion-enemy';
+			select_enemy[i].appendChild(explosion);
+		}
+	}
+}
+
+function create_enemyExplosion() {
+	var enemyExplosion_interval;
+	enemyExplosion_interval = setInterval(enemy_explosion, 50);
+
+	setTimeout (function() {
+		clearInterval(enemyExplosion_interval);
+	}, 2000)
+}
 
 function jet_explosion() {
 	var explosion;
@@ -203,67 +211,62 @@ function jet_explosion() {
 	jet_id.appendChild(explosion);
 }
 
-canvas_wrapper = document.getElementById('canvas-wrapper');
-
-function game_over() {
-	var explosion;
-	setTimeout (function() {
-		jet_explosion();
-	}, 200);
+function create_jetExplosion() {
+	var jetExplosion_interval;
+	jetExplosion_interval = setInterval(jet_explosion, 50);
 
 	setTimeout (function() {
-		clearInterval(collision_interval);
-	}, 1000);
+		clearInterval(jetExplosion_interval);
+	}, 2200);
+}
 
+function stop_loops() {
 	cancelAnimationFrame(background_animframe);
 	cancelAnimationFrame(enemy_animframe);
+	clearInterval(collision_interval);
 	clearInterval(push_interval);
 	clearInterval(key_interval);
+}	
 
+function show_menu() {
+	setTimeout (function() {
+		menu.className = 'menu-show';
+		retry_button = document.createElement('button');
+		retry_button.id = 'retry-menu-button';
+		retry_button.innerHTML = 'Retry';
+		menu.appendChild(retry_button);
+	}, 3000)
+
+	setTimeout (function() {
+		retry_button.onclick = function retry() {
+		 	restart();
+			hide_menu();
+			reset_loops();
+			cleanUp_explosion();
+			cleanUp_enemies();
+			retry_button = null;
+		}		
+	}, 3100);
+}
+
+function game_over() {
+	setTimeout(create_jetExplosion, 100);
+	create_enemyExplosion();
+	stop_loops();
+	show_menu();
 	jet_id.onmousedown = function() {
 		return false;
 	}
 	document.ontouchmove = function() {
 		return false;
 	}
-
-	setTimeout (function() {
-		menu.className = 'menu-show';
-		button.className = 'menu-show';	
-		button.innerHTML = 'Retry';
-	}, 2000);
-	setTimeout (function() {
-		button.addEventListener('click', handler_retry);
-	}, 3000);
 }
 
-function handler_retry(e) {
-	e.target.removeEventListener(e.type, arguments.callee);
-	restart();
-}
-
+//---RESTART FUNCTIONS
 function restart() {
-	var select_explosion;
-	menu.className = 'menu-hide';
-	button.className = 'menu-hide';
-
-	background_animframe = requestAnimationFrame(draw_background);
-	enemy_animframe = requestAnimationFrame(move_enemy);
-	key_interval = setInterval(update_keys, 1);
-	collision_interval = setInterval(detect_collision, 1);
-
 	setTimeout (function() {
 		push_interval = setInterval(push_enemy, 200);
-	}, 2000);
-
-	select_explosion = document.querySelectorAll('.explosion');
-	for(i = 0; i < select_explosion.length; i++) {
-		jet_id.removeChild(select_explosion[i]);
-	}
-
-	for(i = 0; i < select_enemy.length; i++) {
-		enemy_wrapper.removeChild(select_enemy[i]);
-	}
+	}, 4000);
 
 	jet_id.onmousedown = function() {
 		grab(this);
@@ -274,6 +277,35 @@ function restart() {
 	jet_id.style.top = 200 + 'px'; 	
 }
 
+function hide_menu() {
+	if(menu.className === 'menu-show') {
+		menu.className = 'menu-hide';
+		menu.removeChild(retry_button);
+	}
+}
+
+function reset_loops() {
+	background_animframe = requestAnimationFrame(draw_background);
+	enemy_animframe = requestAnimationFrame(move_enemy);
+	key_interval = setInterval(update_keys, 1);
+	collision_interval = setInterval(detect_collision, 1);
+}
+
+function cleanUp_explosion() {
+	var select_explosion;
+	select_explosion = document.querySelectorAll('.explosion');
+	for(i = 0; i < select_explosion.length; i++) {
+		jet_id.removeChild(select_explosion[i]);
+	}
+}
+
+function cleanUp_enemies() {
+	for(i = 0; i < select_enemy.length; i++) {
+		enemy_wrapper.removeChild(select_enemy[i]);
+	}
+}
+
+
 //---KEYBOARD CONTROLS
 function random_thruster_img() {
 	var thrusters = ['fire1.png', 'fire2.png'];
@@ -283,15 +315,19 @@ function random_thruster_img() {
 keyPressed = [];
 
 window.onkeydown = function(input) {
-	keyPressed[input.keyCode] = true;
-		
-	if(input.keyCode === 13) {
-		button.click();
-	}
+	keyPressed[input.keyCode] = true;	
 }
 
 window.onkeyup = function(input) {
 	keyPressed[input.keyCode] = false;
+	if(input.keyCode === 13) {
+		if(start_button != null) {
+			start_button.click();
+		}
+		if(retry_button != null) {
+			retry_button.click();
+		}
+	}
 }
 
 jet_id.style.left = 200 + 'px';
