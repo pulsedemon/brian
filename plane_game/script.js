@@ -228,32 +228,12 @@ function stop_loops() {
 	clearInterval(key_interval);
 }	
 
-function show_menu() {
-	setTimeout (function() {
-		menu.className = 'menu-show';
-		retry_button = document.createElement('button');
-		retry_button.id = 'retry-menu-button';
-		retry_button.innerHTML = 'Retry';
-		menu.appendChild(retry_button);
-	}, 3000)
-
-	setTimeout (function() {
-		retry_button.onclick = function retry() {
-		 	restart();
-			hide_menu();
-			reset_loops();
-			cleanUp_explosion();
-			cleanUp_enemies();
-			retry_button = null;
-		}		
-	}, 3100);
-}
 
 function game_over() {
 	setTimeout(create_jetExplosion, 100);
 	create_enemyExplosion();
 	stop_loops();
-	show_menu();
+	retry_menu();
 	jet_id.onmousedown = function() {
 		return false;
 	}
@@ -305,6 +285,26 @@ function cleanUp_enemies() {
 	}
 }
 
+function retry_menu() {
+	setTimeout (function() {
+		menu.className = 'menu-show';
+		retry_button = document.createElement('button');
+		retry_button.id = 'retry-menu-button';
+		retry_button.innerHTML = 'Retry';
+		menu.appendChild(retry_button);
+	}, 3000);
+
+	setTimeout (function() {
+		retry_button.onclick = function retry() {
+		 	restart();
+			hide_menu();
+			reset_loops();
+			cleanUp_explosion();
+			cleanUp_enemies();
+			retry_button = null;
+		}		
+	}, 3100);
+}
 
 //---KEYBOARD CONTROLS
 function random_thruster_img() {
