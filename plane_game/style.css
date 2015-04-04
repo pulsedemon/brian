@@ -88,7 +88,7 @@ body {
 	font-weight: bold;
 	font-size: 36px;
 	border: 2px solid #ffffff;
-	color: #ffffff;
+	color: #FFD700;
 	width: 140px;
 	height: 80px;
 	position: relative;
@@ -141,7 +141,7 @@ body {
 	z-index: 5;
 	margin-top: -38px;
 }
-#jet-1 {
+#jet-bottom {
 	width: 235px;
 	height: 42px;
 	background: url(jet-bottom.png);

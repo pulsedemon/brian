@@ -1,14 +1,15 @@
-var	img, img_explosion, img_fire1, img_fire2, img_fire3, img_jet,
-	W, H, BGposX, jet_id, thruster, canvas, ctx,
+var	img_bg, img_explosion, img_fire1, img_fire2, img_fire3, img_jet,
+	BGposX, jet_id, thruster, canvas, ctx,
 	background_animframe, enemy_animframe,
-	get_enemy, push_interval,
-	enemy_wrapper, counter, start_button, menu, retry_button, select_enemy,
-	keyPressed, key_speed, selected, y_mouse_pos, x_mouse_pos, x_jet, y_jet;
+	thruster_interval, push_interval, collision_interval, key_interval,
+	enemy_wrapper, get_enemy, select_enemy,
+	counter, start_button, menu, retry_button,
+	keyPressed, jet_speed, selected, y_mouse_pos, x_mouse_pos, x_jet, y_jet;
 
-img = new Image();
-img.onload = function() {
+img_bg = new Image();
+img_bg.onload = function() {
 }
-img.src = 'skies.jpg';
+img_bg.src = 'skies.jpg';
 
 img_explosion = new Image();
 img_explosion.onload = function() {
@@ -40,33 +41,39 @@ BGposX = 0;
 jet_id = document.getElementById('jet-container');
 thruster = document.getElementById('thruster');
 
-
 canvas = document.getElementById('background-canvas');
-	ctx = canvas.getContext('2d');
-	ctx.canvas.width  = window.innerWidth;
-	ctx.canvas.height = window.innerHeight;
-	
-
-W = window.innerWidth;
-H = window.innerHeight;
+ctx = canvas.getContext('2d');
+ctx.canvas.width  = window.innerWidth;
+ctx.canvas.height = window.innerHeight;
 
 function draw_background() {
+	var W, H;
+	W = window.innerWidth;
+	H = window.innerHeight;
 	background_animframe = requestAnimationFrame(draw_background);
 	ctx.clearRect(0, 0, W, H);
-	ctx.drawImage(img, BGposX, 0);
-	ctx.drawImage(img, img.width-Math.abs(BGposX), 0);
-
-	if (Math.abs(BGposX) === img.width) {
+	ctx.drawImage(img_bg, BGposX, 0);
+	ctx.drawImage(img_bg, img_bg.width-Math.abs(BGposX), 0);
+	if (Math.abs(BGposX) === img_bg.width) {
     	BGposX = 0;
 	}
 	BGposX -= 8;
 }
 draw_background();
 
-//---START-MENU
+function random_thruster_img() {
+	var thrusters = ['fire1.png', 'fire2.png'];
+	return thrusters[Math.floor(Math.random() * thrusters.length)];
+}
+
+function thruster_img_loop() {
+	thruster.style.cssText += 'background: url(' + random_thruster_img() + '), url("fire3-tiny.png");';
+}
+thruster_interval = setInterval(thruster_img_loop, 10);
+
+//---START MENU
 start_button = document.getElementById('start-menu-button');
 menu = document.getElementById('menu');
-
 
 start_button.onclick = function start() {
 	menu.className = 'menu-hide';
@@ -106,10 +113,8 @@ function random_spawn() {
 }
 
 get_enemy = random_enemies();
-
 enemy_wrapper = document.getElementById('enemy-wrapper');
 counter = 0;
-
 
 function push_enemy() {
 	var create_enemy;
@@ -117,7 +122,8 @@ function push_enemy() {
 	if(counter >= random_spawn()) {
 		create_enemy = document.createElement('div');
 		create_enemy.className = 'enemy';
-		create_enemy.style.cssText = 'width: '+ get_enemy.w +'px; height:'+ get_enemy.h +'px; top:' + random_y_pos() + 'px; left:' + get_enemy.x_pos + 'px;'; 
+		create_enemy.style.cssText = 'width: '+ get_enemy.w +'px; height:'+ get_enemy.h +'px;' +
+		'top:' + random_y_pos() + 'px; left:' + get_enemy.x_pos + 'px;';
 		enemy_wrapper.appendChild(create_enemy);
 		get_enemy = random_enemies();
 		random_spawn();
@@ -140,12 +146,11 @@ function move_enemy() {
 				enemy_wrapper.removeChild(select_enemy[i]);
 			}
 		}
-	}	
+	}
 }
 move_enemy();
-			
-//---COLLISION DETECTION
 
+//---COLLISION DETECTION
 function detect_collision() {
 	var enemy_x, enemy_y, enemy_w, enemy_h, jet_x, jet_y, jet_w, jet_y, explosion;
 	for(i = 0; i < select_enemy.length; i++) {
@@ -169,8 +174,8 @@ function detect_collision() {
 		if(enemy_x < (jet_x + jet_w) &&
 		(enemy_x + enemy_w) > jet_x &&
 		enemy_y < (jet_y + jet_h) &&
-		(enemy_h + enemy_y) > jet_y || 
-		
+		(enemy_h + enemy_y) > jet_y ||
+
 		//--RUDDER COLLISION
 		enemy_x < (rudder_x + rudder_w) &&
 		(enemy_x + enemy_w) > rudder_x &&
@@ -179,12 +184,12 @@ function detect_collision() {
 			select_enemy[i].id = 'enemy-hidden';
 			selected = null;
 			game_over();
-		}	
-	}	
+		}
+	}
 }
-var collision_interval = setInterval(detect_collision, 1);
+collision_interval = setInterval(detect_collision, 1);
 
-//---GAME-OVER FUNCTIONS
+//---GAME OVER FUNCTIONS
 function enemy_explosion() {
 	for(i = 0; i < select_enemy.length; i++) {
 		if(select_enemy[i].id === 'enemy-hidden') {
@@ -198,7 +203,6 @@ function enemy_explosion() {
 function create_enemyExplosion() {
 	var enemyExplosion_interval;
 	enemyExplosion_interval = setInterval(enemy_explosion, 50);
-
 	setTimeout (function() {
 		clearInterval(enemyExplosion_interval);
 	}, 2000)
@@ -214,7 +218,6 @@ function jet_explosion() {
 function create_jetExplosion() {
 	var jetExplosion_interval;
 	jetExplosion_interval = setInterval(jet_explosion, 50);
-
 	setTimeout (function() {
 		clearInterval(jetExplosion_interval);
 	}, 2200);
@@ -223,11 +226,11 @@ function create_jetExplosion() {
 function stop_loops() {
 	cancelAnimationFrame(background_animframe);
 	cancelAnimationFrame(enemy_animframe);
+	clearInterval(thruster_interval);
 	clearInterval(collision_interval);
 	clearInterval(push_interval);
 	clearInterval(key_interval);
-}	
-
+}
 
 function game_over() {
 	setTimeout(create_jetExplosion, 100);
@@ -239,49 +242,6 @@ function game_over() {
 	}
 	document.ontouchmove = function() {
 		return false;
-	}
-}
-
-//---RESTART FUNCTIONS
-function restart() {
-	setTimeout (function() {
-		push_interval = setInterval(push_enemy, 200);
-	}, 4000);
-
-	jet_id.onmousedown = function() {
-		grab(this);
-		return false;
-	}
-	document.ontouchmove = touch_move;
-	jet_id.style.left = 200 + 'px';
-	jet_id.style.top = 200 + 'px'; 	
-}
-
-function hide_menu() {
-	if(menu.className === 'menu-show') {
-		menu.className = 'menu-hide';
-		menu.removeChild(retry_button);
-	}
-}
-
-function reset_loops() {
-	background_animframe = requestAnimationFrame(draw_background);
-	enemy_animframe = requestAnimationFrame(move_enemy);
-	key_interval = setInterval(update_keys, 1);
-	collision_interval = setInterval(detect_collision, 1);
-}
-
-function cleanUp_explosion() {
-	var select_explosion;
-	select_explosion = document.querySelectorAll('.explosion');
-	for(i = 0; i < select_explosion.length; i++) {
-		jet_id.removeChild(select_explosion[i]);
-	}
-}
-
-function cleanUp_enemies() {
-	for(i = 0; i < select_enemy.length; i++) {
-		enemy_wrapper.removeChild(select_enemy[i]);
 	}
 }
 
@@ -299,23 +259,63 @@ function retry_menu() {
 		 	restart();
 			hide_menu();
 			reset_loops();
-			cleanUp_explosion();
+			cleanUp_explosions();
 			cleanUp_enemies();
 			retry_button = null;
-		}		
+		}
 	}, 3100);
 }
 
-//---KEYBOARD CONTROLS
-function random_thruster_img() {
-	var thrusters = ['fire1.png', 'fire2.png'];
-	return thrusters[Math.floor(Math.random() * thrusters.length)];
+//---RESTART FUNCTIONS
+function restart() {
+	setTimeout (function() {
+		push_interval = setInterval(push_enemy, 200);
+	}, 4000);
+
+	jet_id.onmousedown = function() {
+		grab(this);
+		return false;
+	}
+
+	document.ontouchmove = touch_move;
+	jet_id.style.left = 200 + 'px';
+	jet_id.style.top = 200 + 'px';
 }
 
+function hide_menu() {
+	if(menu.className === 'menu-show') {
+		menu.className = 'menu-hide';
+		menu.removeChild(retry_button);
+	}
+}
+
+function reset_loops() {
+	background_animframe = requestAnimationFrame(draw_background);
+	enemy_animframe = requestAnimationFrame(move_enemy);
+	thruster_interval = setInterval(thruster_img_loop);
+	key_interval = setInterval(update_keys, 1);
+	collision_interval = setInterval(detect_collision, 1);
+}
+
+function cleanUp_explosions() {
+	var select_explosion;
+	select_explosion = document.querySelectorAll('.explosion');
+	for(i = 0; i < select_explosion.length; i++) {
+		jet_id.removeChild(select_explosion[i]);
+	}
+}
+
+function cleanUp_enemies() {
+	for(i = 0; i < select_enemy.length; i++) {
+		enemy_wrapper.removeChild(select_enemy[i]);
+	}
+}
+
+//---KEYBOARD CONTROLS
 keyPressed = [];
 
 window.onkeydown = function(input) {
-	keyPressed[input.keyCode] = true;	
+	keyPressed[input.keyCode] = true;
 }
 
 window.onkeyup = function(input) {
@@ -332,76 +332,75 @@ window.onkeyup = function(input) {
 
 jet_id.style.left = 200 + 'px';
 jet_id.style.top = 200 + 'px';
-key_speed = 5;
+jet_speed = 5;
 
 function update_keys() {
-	var key_x, key_y;
-	key_x = parseInt(jet_id.style.left);
-	key_y = parseInt(jet_id.style.top);
-
-	thruster.style.cssText += 'background: url(' + random_thruster_img() + '), url("fire3-tiny.png");';
+	var jet_x, jet_y;
+	jet_x = parseInt(jet_id.style.left);
+	jet_y = parseInt(jet_id.style.top);
 
 	//--LEFT
 	if (keyPressed[37] || keyPressed[65]) {
-	    key_x -= key_speed;
-	}
-	//--RIGHT
-	if (keyPressed[39] || keyPressed[68]) {
-	    key_x += key_speed;
-	}
-	//--UP
-	if (keyPressed[38] || keyPressed[87]) {
-	    key_y -= key_speed;
-	}
-	//--DOWN
-	if (keyPressed[40] || keyPressed[83]) {
-	    key_y += key_speed;
+	    jet_x -= jet_speed;
 	}
 
-    //--MOVEMENT PARAMETERS.
-	if(key_x >= ctx.canvas.width - jet_id.offsetWidth) {
+	//--RIGHT
+	if (keyPressed[39] || keyPressed[68]) {
+	    jet_x += jet_speed;
+	}
+
+	//--UP
+	if (keyPressed[38] || keyPressed[87]) {
+	    jet_y -= jet_speed;
+	}
+
+	//--DOWN
+	if (keyPressed[40] || keyPressed[83]) {
+	    jet_y += jet_speed;
+	}
+
+  //--MOVEMENT PARAMETERS
+	if(jet_x >= ctx.canvas.width - jet_id.offsetWidth) {
 		jet_id.style.left = ctx.canvas.width - jet_id.offsetWidth + 'px';
 	}
-	else if(key_x <= 0) {
+	else if(jet_x <= 0) {
 		jet_id.style.left = 0;
 	}
 	else{
-		jet_id.style.left = key_x + 'px';
+		jet_id.style.left = jet_x + 'px';
 	}
 
-	if(key_y >= ctx.canvas.height - jet_id.offsetHeight) {
+	if(jet_y >= ctx.canvas.height - jet_id.offsetHeight) {
 		jet_id.style.top = ctx.canvas.height - jet_id.offsetHeight + 'px';
 	}
-	else if(key_y <= 0 + 38) {
+	else if(jet_y <= 0 + 38) {
 		jet_id.style.top = 38 + 'px';
 	}
 	else {
-		jet_id.style.top = key_y + 'px';
+		jet_id.style.top = jet_y + 'px';
 	}
 }
-
-var key_interval = setInterval(update_keys, 1);
+key_interval = setInterval(update_keys, 1);
 
 //---MOUSE CONTROLS
-
 jet_id.onmousedown = function() {
 	grab(this);
 	return false;
 }
 
-function grab(jetContainer) {
-	selected = jetContainer;
-	x_jet = x_mouse_pos - jetContainer.offsetLeft;
-	y_jet = y_mouse_pos - jetContainer.offsetTop;
+function grab(jet) {
+	selected = jet;
+	x_jet = x_mouse_pos - jet.offsetLeft;
+	y_jet = y_mouse_pos - jet.offsetTop;
 }
 
-function move_plane(jetContainer) {
+function move_plane(jet) {
 	var jet_positionX, jet_positionY;
-	x_mouse_pos = jetContainer.pageX || jetContainer.clientX;
-	y_mouse_pos = jetContainer.pageY || jetContainer.clientY;
-	
+	x_mouse_pos = jet.pageX || jet.clientX;
+	y_mouse_pos = jet.pageY || jet.clientY;
+
 	//--MOVEMENT PARAMETERS
-	if (selected !== null) {
+	if (selected != null) {
 		jet_positionX = x_mouse_pos - x_jet;
 		if(jet_positionX >= ctx.canvas.width - jet_id.offsetWidth) {
 			jet_id.style.left = ctx.canvas.width - jet_id.offsetWidth + 'px';
@@ -434,12 +433,12 @@ document.onmousemove = move_plane;
 document.onmouseup = let_go;
 
 //---TOUCH SCREEN CONTROLS
-function touch_move(jetContainer) {
-	if(jetContainer.touches.length === 1) {
+function touch_move(jet) {
+	if(jet.touches.length === 1) {
 		var touch;
-		touch = jetContainer.touches[0];
+		touch = jet.touches[0];
 		jet_id.style.left = touch.pageX + 'px';
-		jet_id.style.top = touch.pageY + 'px';	
+		jet_id.style.top = touch.pageY + 'px';
 	}
 }
 
