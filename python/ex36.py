@@ -217,7 +217,6 @@ def level_one(weapon, health):
             print invalid_input
 
 def game_start():
-    random_chance = randint(1, 3)
     while True:
         weapon_choice = raw_input("> ").lower()
         weapon = weapon_choice
