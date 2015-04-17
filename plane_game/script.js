@@ -54,9 +54,11 @@ function draw_background() {
 	ctx.clearRect(0, 0, W, H);
 	ctx.drawImage(img_bg, BGposX, 0);
 	ctx.drawImage(img_bg, img_bg.width-Math.abs(BGposX), 0);
+
 	if (Math.abs(BGposX) === img_bg.width) {
     	BGposX = 0;
 	}
+	
 	BGposX -= 8;
 }
 draw_background();
