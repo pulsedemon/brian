@@ -109,7 +109,7 @@ class Enemy(object):
 				charge_list.append(charge_chance)
 			elif prompt == 'check':
 				level().check_status(weapon, HP)
-			elif prompt == 'check/enemy':
+			elif prompt == 'checkenemy':
 				check_enemy()
 			else:
 				print(level.error_message)
