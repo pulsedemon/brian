@@ -22,6 +22,7 @@ class Level(object):
 
 	enemies_slain = []
 	treasure = []
+	fairy = []
 
 	def check_status(self, weapon, HP):
 		print("\n-------------------")
@@ -36,15 +37,103 @@ class Level(object):
 		print("GAME OVER")
 		exit(1)
 
+class Arena(Level):
+	def enter(self, weapon, HP):
+		level = Arena
+		werewolf = Enemy('Werewolf', 60, 15, 70, 20)
+		shadow = Enemy('Shadow Beast', 100, 8, 50, 50)
+		skeleton = Enemy('Skeleton', 50, 20, 75, 40)
+		demon = Enemy('Horned Demon', 70, 12, 65, 50)
+		dragon = Enemy('Dragon', 200, 20, 70, 80)
+
+		if Level.fairy[0]:
+			print("The fairy appears and magically mends your"
+			 "\nailments and temporarily increases your max health to 100.")
+			HP = 100
+			print("The fairy disappears\n")
+		else:
+			pass
+
+		if len(Level.enemies_slain) is 2:
+			print("You enter into a big indoor Arena")
+			print("There are 4 creatures around the edge of the Arena")
+			print("%s, %s, %s and a %s" % (werewolf.name, shadow.name, skeleton.name, demon.name))
+			print("All their eyes are on you as you walk to the center")
+
+			while True:
+				print("\nAre you READY?")
+				prompt = input("> ").lower()
+
+				if prompt == 'ready' or prompt == 'yes' or prompt == 'y':
+					Enemy.combat(werewolf, weapon, HP, level)
+					return Arena
+				elif prompt == 'check':
+					level().check_status(weapon, HP)
+
+		if len(Level.enemies_slain) is 3:
+			print("At least the creatures are considerate enough to attack 1 at a time.")
+			print("3 left.")
+
+			while True:
+				print("\nAre you READY?")
+				prompt = input("> ").lower()
+
+				if prompt == 'ready' or prompt == 'yes' or prompt == 'y':
+					Enemy.combat(shadow, weapon, HP, level)
+					return Arena
+				elif prompt == 'check':
+					level().check_status(weapon, HP)
+
+		if len(Level.enemies_slain) is 4:
+			print("2 left.")
+
+			while True:
+				print("\nAre you READY?")
+				prompt = input("> ").lower()
+
+				if prompt == 'ready' or prompt == 'yes' or prompt == 'y':
+					Enemy.combat(skeleton, weapon, HP, level)
+					return Arena
+				elif prompt == 'check':
+					level().check_status(weapon, HP)
+
+		if len(Level.enemies_slain) is 5:
+			print("1 left.")
+
+			while True:
+				print("\nAre you READY?")
+				prompt = input("> ").lower()
+
+				if prompt == 'ready' or prompt == 'yes' or prompt == 'y':
+					Enemy.combat(demon, weapon, HP, level)
+					return Arena
+				elif prompt == 'check':
+					level().check_status(weapon, HP)
+			
+		if len(Level.enemies_slain) is 6:
+			print("The fairy's laugh can be heard echoing in the Arena")
+			print("All of a sudden, a %s appears out of nowhere" % dragon.name)
+
+			while True:
+				print("\nAre you READY?")
+				prompt = input("> ").lower()
+
+				if prompt == 'ready' or prompt == 'yes' or prompt == 'y':
+					Enemy.combat(dragon, weapon, HP, level)
+					return Arena
+				elif prompt == 'check':
+					level().check_status(weapon, HP)
+					
+
 class Treasure_room(Level):
 	def enter(self, weapon, HP):
 
-		if not Level.treasure:
+		if not Level().treasure:
 			print("There is a Treasure Chest here in a small window-less room")
 
 			while True:
 				print("\nOPEN the Treasure Chest or EXIT the room?")
-				prompt = raw_input("> ").lower()
+				prompt = input("> ").lower()
 
 				if(prompt == 'open' or prompt == 'open treasure chest' or
 					prompt == 'open chest'):
@@ -56,21 +145,23 @@ class Treasure_room(Level):
 					return Treasure_room
 				elif prompt == 'exit':
 					Corridor().enter(weapon, HP)
+					return Treasure_room
 				elif prompt == 'check':
 					Level().check_status(weapon, HP)
 				else:
 					print(Level.error_message)
 				
-
 		else:
-			print("Nothing else here.")
 
 			while True:
-				print("\nEXIT?")
-				prompt = raw_input("> ").lower()
+				print("Nothing else here.")
+				print("\nEXIT the room?")
+				prompt = input("> ").lower()
 
-				if prompt == 'exit' or prompt == 'yes':
+				if (prompt == 'exit' or prompt == 'yes' or
+					prompt == 'y' or prompt == 'exit?'):
 					Corridor().enter(weapon, HP)
+					return Treasure_room
 				elif prompt == 'check':
 					Level().check_status(weapon, HP)
 				else:
@@ -79,63 +170,96 @@ class Treasure_room(Level):
 
 class Corridor(Level):
 	def enter(self, weapon, HP):
+		level = Corridor
+		dog = Enemy('Demon Dog', 30, 10, 65, 30)
 
 		if len(Level.enemies_slain) is 1:
-			dog = Enemy('Demon Dog', 30, 10, 65, 30, 20)
 
 			print("You enter a long Corridor.")
 			print("There is a %s at the end of it." % dog.name)
-			print("There is a DOOR to your right.")
+			print("There is a door to your right.")
 
 			while True:
 				print("\nDo you want to FIGHT the %s, or OPEN the door?" % dog.name)
-				prompt = raw_input("> ").lower()
+				prompt = input("> ").lower()
 
-				if prompt == 'open':
+				if prompt == 'fight':
+					Enemy.combat(dog, weapon, HP, level)
+					return Corridor
+				elif prompt == 'open':
 					Treasure_room().enter(weapon, HP)
+					return Corridor
 				elif prompt == 'check':
 					Level().check_status(weapon, HP)
 				else:
 					print(Level.error_message)
 
-
 		else:
-			print("You enter a long Corridor.")
 			print("The %s is dead" % dog.name)
-			print("There is a DOOR to your right.")
-			print("\nDo you want to open the TREASURE door or the DOG door?")
+			print("There is the TREASURE room door.")
+			print("And there is a door behind the %s's corpse." % dog.name)
+			print("\nDo you want to open the TREASURE room door or the DOG door?")
 
-			prompt = raw_input("> ").lower()
-			if prompt == 'TREASURE':
-				pass
+			while True:
+				prompt = input("> ").lower()
+				if prompt == 'treasure':
+					Treasure_room().enter(weapon, HP)
+				elif prompt == 'dog':
+					print("As you reach for the door, a Magical Fairy appears.")
+					print("It warns you of dangers ahead in the next room.")
+					print("The Fairy offers to help you in any way it can.")
+					
+					while True:
+						print("\nDo you accept? y/n")
+						take_help = input("> ").lower()
+
+						if take_help == 'y' or take_help == 'yes':
+							Level().fairy.append(True)
+							Arena().enter(weapon, HP)
+							return Corridor
+						elif take_help == 'n' or take_help == 'no':
+							choice = False
+							Level().fairy.append(False)
+							Arena().enter(weapon, HP)
+							return Corridor
+						else:
+							print(Level.error_message) 
+
+				elif prompt == 'check':
+					level().check_status(weapon, HP)	
+				else:
+					print(Level.error_message)
 
 
 
 class Hallway(Level):
 	def enter(self, weapon, HP):
 		level = Hallway
+		minotaur = Enemy('Minotaur', 40, 5, 70, 50)
 
 		if not Level.enemies_slain:
-			ogre = Enemy('Ogre', 1, 5, 70, 50, 30)
 
 			print("You exit the room into a hallway that leads to the right.")
-			print("At the end of the hallway is a door blocked by a %s." % ogre.name)
+			print("At the end of the hallway is a door blocked by a %s." % minotaur.name)
 
 			while True:
 				print("\nFIGHT?")
-				prompt = raw_input("> ").lower()
+				prompt = input("> ").lower()
 
-				if prompt == 'fight' or prompt == 'yes':
-					Enemy.combat(ogre, weapon, HP, level)
+				if (prompt == 'fight' or prompt == 'yes' or
+					prompt == 'y' or prompt == 'fight?'):
+					Enemy.combat(minotaur, weapon, HP, level)
 					return Hallway
+				elif prompt == 'check':
+					Level().check_status(weapon, HP)
 				else:
 					print(Level.error_message)
 
 		else:
 			while True:
-				print "with the %s slain," % Level.enemies_slain[0]
+				print ("With the %s slain," % minotaur.name)
 				print("\nYou can now OPEN the door.")
-				prompt = raw_input("> ").lower()
+				prompt = input("> ").lower()
 				
 				if prompt == 'open' or prompt == 'open door':
 					Corridor().enter(weapon, HP)
@@ -143,23 +267,27 @@ class Hallway(Level):
 				elif prompt == 'check':
 					Level().check_status(weapon, HP)
 				else:
-					print(Level.error_message)
+					print("%s\n" % Level.error_message)
 
 #GAME_START FUNCTIONS
 class Tutorial(Level):
 	def enter(self, weapon):
 		HP = Level.max_health
+		print(HP)
 
 		print("Your %s has a %d%% chance to hit." % (weapon.name, weapon.accuracy))
 		print("Your %s deals %d damage on successful attack." % (weapon.name, weapon.damage))
 		print("Your %s has a %d%% chance to crit on successful attack." % (weapon.name, weapon.crit))
 		print("Crit damage deals double the base damage.\n")
 		print("You also take a shield which is useful for blocking enemy charge-up attacks.")
-		print("Type CHECK at any time when not in combat to check weapon and health stats.")
+		print("Type CHECK at any time to check weapon and health stats.")
+		print("The commands you need to type in are displayed in CAPS")
+		print("When in combat, you can use A and D as shorter commands for")
+		print("ATTACK and DEFEND")
 
 		while True:
 			print("\nType NEXT to continue.")
-			prompt = raw_input("> ").lower()
+			prompt = input("> ").lower()
 
 			if prompt == 'next':
 				Hallway().enter(weapon, HP)
@@ -181,7 +309,7 @@ class Start_room(Level):
 			print("CHECK or TAKE which weapon?")
 
 			try:
-				check_take, weapon_choice = raw_input("> ").lower().split()
+				check_take, weapon_choice = input("> ").lower().split()
 
 				for i in range(len(weapons)):
 					if weapon_choice == weapons[i].name.lower():
@@ -201,12 +329,12 @@ class Start_room(Level):
 						Tutorial().enter(weapon)
 						return Start_room
 					else:
-						print(Level.error_message)
+						print("%s\n" % Level.error_message)
 
 				else:
-					print(Level.error_message)
+					print("%s\n" % Level.error_message)
 
 			except ValueError:
-				print("Please enter 2 values.")
+				print("Please enter 2 values.\n")
 
 Start_room().enter()

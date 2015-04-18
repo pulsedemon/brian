@@ -1,13 +1,13 @@
 from random import randint
 
 class Enemy(object):
-	def __init__(self, name, health, damage, accuracy, crit, charge):
+	def __init__(self, name, health, damage, accuracy, crit):
 		self.name = name
 		self.health = health
 		self.damage = damage
 		self.accuracy = accuracy
 		self.crit = crit
-		self.charge = charge
+		self.charge = 20
 
 	def combat(self, weapon, HP, level):
 		print("\n-------------------------------")
@@ -20,6 +20,16 @@ class Enemy(object):
 			else:
 				chance = False
 				return chance
+
+		def check_enemy():
+			print("\n-------------------------------------")
+			print("%s:" % self.name)
+			print(" Health: %d" % self.health)
+			print(" Damage: %d" % self.damage)
+			print(" Accuracy: %d%% chance to hit" % self.accuracy)
+			print(" Crit: %d%% chance to crit on successful hit" % self.crit)
+			print(" Charge: %d%% chance to initiate a charge attack" % self.charge)
+			print("---------------------------------------")
 
 		charge_list = []
 		charge_chance = charge(randint(1, 100))
@@ -44,9 +54,9 @@ class Enemy(object):
 
 			print("\nATTACK with %s or DEFEND with shield?" % weapon.name)
 
-			prompt = raw_input("> ").lower()	
+			prompt = input("> ").lower()	
 			print("\n-------------------------------")
-			if prompt == 'attack':
+			if prompt == 'attack' or prompt == 'a':
 
 				if hit_chance < weapon.accuracy:
 
@@ -92,12 +102,14 @@ class Enemy(object):
 					charge_list.pop()
 					charge_list.append(charge_chance)
 
-			elif prompt == 'defend':
+			elif prompt == 'defend' or prompt == 'd':
 				print("Defended %s's attack." % self.name)
 				charge_chance = charge(randint(1, 100))
 				charge_list.pop()
 				charge_list.append(charge_chance)
 			elif prompt == 'check':
 				level().check_status(weapon, HP)
+			elif prompt == 'check/enemy':
+				check_enemy()
 			else:
 				print(level.error_message)
