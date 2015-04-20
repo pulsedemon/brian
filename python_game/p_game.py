@@ -50,11 +50,12 @@ class Arena(Level):
 			print("\nAre you READY?")
 			prompt = input("> ").lower()
 
-			if prompt == 'ready' or prompt == 'yes' or prompt == 'y':
+			if (prompt == 'ready' or prompt == 'yes' or 
+					prompt == 'y' or prompt == ''):
 				Enemy.combat(enemy, weapon, HP, level)
 				return Arena
 			elif prompt == 'check':
-				level().check_status(weapon, HP)
+				Level().check_status(weapon, HP)
 			else:
 				print(Level.error_message)
 
@@ -63,7 +64,7 @@ class Arena(Level):
 
 			if Level.fairy[0] and len(Level.enemies_slain) > 2:
 				print("The fairy appears and magically mends your"
-				 "\nailments and temporarily increases your max health to 100.")
+					"\nailments and temporarily increases your max health to 100.")
 				HP = 100
 				print("The fairy disappears\n")
 			else:
@@ -72,7 +73,8 @@ class Arena(Level):
 			if len(Level.enemies_slain) is 2:
 				print("You enter into a big indoor Arena.")
 				print("There are 4 creatures around the edge of the Arena.")
-				print("%s, %s, %s and a %s." % (werewolf.name, shadow.name, skeleton.name, demon.name))
+				print("A %s, %s, %s and a %s." 
+					% (werewolf.name, shadow.name, skeleton.name, demon.name))
 				print("All their eyes are on you as you walk to the center.")
 
 				while True:
@@ -125,8 +127,8 @@ class Treasure_room(Level):
 				print("\nOPEN the Treasure Chest or EXIT the room?")
 				prompt = input("> ").lower()
 
-				if(prompt == 'open' or prompt == 'open treasure chest' or
-					prompt == 'open chest'):
+				if (prompt == 'open' or prompt == 'open treasure chest'
+						or prompt == 'open chest'):
 					HP = Level.max_health
 					print("\n----------------------------------------")
 					print("Inside you find a healing potion")
@@ -146,12 +148,12 @@ class Treasure_room(Level):
 		else:
 
 			while True:
-				print("Nothing else here.")
+				print("\nNothing else here.")
 				print("\nEXIT the room?")
 				prompt = input("> ").lower()
 
-				if (prompt == 'exit' or prompt == 'yes' or
-					prompt == 'y' or prompt == 'exit?'):
+				if (prompt == 'exit' or prompt == 'yes' or prompt == 'y'
+				 		or prompt == 'exit?' or prompt == ''):
 					Corridor().enter(weapon, HP)
 					return Treasure_room
 				elif prompt == 'check':
@@ -240,7 +242,7 @@ class Hallway(Level):
 				prompt = input("> ").lower()
 
 				if (prompt == 'fight' or prompt == 'yes' or
-					prompt == 'y' or prompt == 'fight?'):
+						prompt == 'y' or prompt == ''):
 					Enemy.combat(minotaur, weapon, HP, level)
 					return Hallway
 				elif prompt == 'check':
@@ -254,7 +256,7 @@ class Hallway(Level):
 				print("\nYou can now OPEN the door.")
 				prompt = input("> ").lower()
 				
-				if prompt == 'open' or prompt == 'open door':
+				if prompt == 'open' or prompt == 'open door' or prompt == '':
 					Corridor().enter(weapon, HP)
 					return Hallway
 				elif prompt == 'check':
@@ -274,16 +276,16 @@ class Tutorial(Level):
 		print("Crit damage deals double the base damage.\n")
 		print("You also take a shield which is useful for blocking enemy charge-up attacks.")
 		print("\nType CHECK at any time to check weapon and health stats.")
-		print("Type CHECKENEMY while in battle to see the enemy's stats")
-		print("\nThe commands you need to type in are displayed in CAPS")
+		print("Type CHECKENEMY while in battle to see the enemy's stats.")
+		print("\nThe commands you need to type in are displayed in CAPS.")
 		print("When in combat, you can use A and D as shorter commands for")
 		print("ATTACK and DEFEND")
 
 		while True:
-			print("\nType NEXT to continue.")
+			print("\nHit Enter to continue.")
 			prompt = input("> ").lower()
 
-			if prompt == 'next':
+			if prompt == '':
 				Hallway().enter(weapon, HP)
 				return Tutorial
 			elif prompt == 'check':

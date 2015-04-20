@@ -13,7 +13,8 @@ class Enemy(object):
 		print("\n-------------------------------")
 		print("You have engaged the %s." % self.name)
 
-		def charge(chance):			
+		def charge(chance):	
+				
 			if chance < self.charge:
 				chance = True
 				return chance
